@@ -1,7 +1,7 @@
 
-import { getAvailability } from "../calendar/availability.js";
-import { createBooking } from "../calendar/booking.js";
-import { NextRequest, NextResponse } from "next/server.js";
+import { getAvailability } from "./availability";
+import { createBooking } from "./booking";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const date = req.nextUrl.searchParams.get("date");
