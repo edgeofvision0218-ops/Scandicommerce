@@ -3,9 +3,23 @@
 import { Package } from '@/lib/packages'
 import LiquidBlob from '@/components/ui/LiquidBlob'
 import Button from '@/components/ui/Button'
+import PackageAddToCart from './PackageAddToCart'
+import AddToCartDropdown from '@/components/sections/merch/AddToCartDropdown'
 
 interface PackageHeroProps {
   pkg: Package
+  shopifyProduct?: {
+    variantId: string
+    productTitle: string
+    hasVariants: boolean
+    variants: Array<{
+      id: string
+      title: string
+      price: number
+      currencyCode: string
+      availableForSale: boolean
+    }>
+  }
 }
 
 // Star rating component
@@ -44,7 +58,7 @@ function StarRating({ rating, maxStars = 5 }: { rating: number; maxStars?: numbe
   )
 }
 
-export default function PackageHero({ pkg }: PackageHeroProps) {
+export default function PackageHero({ pkg, shopifyProduct }: PackageHeroProps) {
   return (
     <section className="relative bg-[#F8F8F8] py-6 xs:py-16 lg:py-20 overflow-hidden min-h-[600px]">
       {/* Mobile Blob - Centered animation like blog details page (< 1024px) */}
@@ -129,9 +143,32 @@ export default function PackageHero({ pkg }: PackageHeroProps) {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button href={pkg.heroButtons?.primaryButtonLink || '/contact'} type="primary">
-                {pkg.heroButtons?.primaryButtonText || 'Book Discovery Call'}
-              </Button>
+              {shopifyProduct ? (
+                <>
+                  {/* If package has Shopify product with multiple variants, show dropdown */}
+                  {shopifyProduct.hasVariants ? (
+                    <AddToCartDropdown
+                      variants={shopifyProduct.variants}
+                      productTitle={shopifyProduct.productTitle}
+                      quantity={1}
+                    />
+                  ) : (
+                    /* If single variant, show simple Add to Cart button */
+                    <PackageAddToCart
+                      variantId={shopifyProduct.variantId}
+                      productTitle={shopifyProduct.productTitle}
+                      quantity={1}
+                    />
+                  )}
+                  <Button href={pkg.heroButtons?.primaryButtonLink || '/contact'}>
+                    {pkg.heroButtons?.primaryButtonText || 'Book Discovery Call'}
+                  </Button>
+                </>
+              ) : (
+                <Button href={pkg.heroButtons?.primaryButtonLink || '/contact'} type="primary">
+                  {pkg.heroButtons?.primaryButtonText || 'Book Discovery Call'}
+                </Button>
+              )}
               {/* <Button href={pkg.heroButtons?.secondaryButtonLink || '#'}>
                 {pkg.heroButtons?.secondaryButtonText || 'Download Scope'}
               </Button> */}
