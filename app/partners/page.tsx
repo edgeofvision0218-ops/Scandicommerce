@@ -5,6 +5,7 @@ import PartnersGrid from '@/components/sections/partners/PartnersGrid'
 import BecomeAPartner from '@/components/sections/partners/BecomeAPartner'
 import { client } from '@/sanity/lib/client'
 import { partnersPageQuery } from '@/sanity/lib/queries'
+import { getQueryParams } from '@/sanity/lib/queryHelpers'
 import Hero from '@/components/layout/Hero'
 
 export const dynamic = 'force-dynamic'
@@ -54,7 +55,7 @@ interface PartnersPageData {
 export default async function Partners() {
   const pageData: PartnersPageData = await client.fetch(
     partnersPageQuery,
-    {},
+    getQueryParams({}),
     { next: { revalidate: 0 } }
   )
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import Logo from '@/components/ui/Logo'
-import Link from 'next/link'
+import LocalizedLink from '@/components/ui/LocalizedLink'
 import { FaLinkedinIn, FaTwitter, FaInstagram, FaFacebookF, FaYoutube, FaGithub } from 'react-icons/fa'
 
 interface FooterLink {
@@ -138,12 +138,12 @@ export default function Footer({ settings }: FooterProps) {
               <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                 {column.links?.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <Link
+                    <LocalizedLink
                       href={link.href || '#'}
                       className="text-gray-300 hover:text-teal transition-colors"
                     >
                       {link.label}
-                    </Link>
+                    </LocalizedLink>
                   </li>
                 ))}
               </ul>
@@ -215,13 +215,13 @@ export default function Footer({ settings }: FooterProps) {
             {bottomSection.legalLinks && bottomSection.legalLinks.length > 0 && (
               <div className="flex flex-wrap gap-3 sm:gap-4 lg:gap-6 text-xs sm:text-sm">
                 {bottomSection.legalLinks.map((link, index) => (
-                  <Link
+                  <LocalizedLink
                     key={index}
                     href={link.href || '#'}
                     className="text-gray-400 hover:text-teal transition-colors"
                   >
                     {link.label}
-                  </Link>
+                  </LocalizedLink>
                 ))}
               </div>
             )}

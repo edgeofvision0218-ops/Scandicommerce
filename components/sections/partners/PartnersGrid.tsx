@@ -132,6 +132,7 @@ function getCategoryIcon(group: string, size: 'sm' | 'md' = 'md') {
 export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [expandedPartnerId, setExpandedPartnerId] = useState<number | null>(null)
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   const partners: Partner[] = partnersGrid?.partners && partnersGrid.partners.length > 0
@@ -389,12 +390,13 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                   {groupPartners.map((partner, index) => (
                     <div
                       key={partner.id}
-                      className="animate-fade-in-up opacity-0"
+                      className={`animate-fade-in-up opacity-0 ${expandedPartnerId === partner.id ? 'relative z-40 overflow-visible' : ''}`}
                       style={{ animationDelay: `${index * 0.05}s`, animationFillMode: 'forwards' }}
                     >
                       <PartnerCard
                         partner={partner}
                         imageSizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        onExpandChange={(expanded) => setExpandedPartnerId(expanded ? partner.id : null)}
                       />
                     </div>
                   ))}

@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import Logo from '@/components/ui/Logo'
 import Link from 'next/link'
+import LocalizedLink from '@/components/ui/LocalizedLink'
 import { HiShoppingBag } from 'react-icons/hi2'
 import { useCart } from '@/contexts/CartContext'
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher'
 
 interface MenuItem {
   label?: string
@@ -132,9 +134,9 @@ export default function Header({ settings }: HeaderProps) {
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
-            <Link href="/">
+            <LocalizedLink href="/">
               <Logo />
-            </Link>
+            </LocalizedLink>
           </div>
 
           <div className="hidden lg:flex items-center space-x-8">
@@ -168,14 +170,14 @@ export default function Header({ settings }: HeaderProps) {
                   onMouseLeave={() => setIsServicesOpen(false)}
                 >
                   {servicesMenu.items?.map((item, index) => (
-                    <Link
+                    <LocalizedLink
                       key={index}
                       href={item.href || '#'}
                       onClick={() => setIsServicesOpen(false)}
                       className="block px-6 py-3 text-gray-900 hover:text-teal hover:bg-gray-50 transition-colors font-medium text-base"
                     >
                       {item.label}
-                    </Link>
+                    </LocalizedLink>
                   ))}
                 </div>
               )}
@@ -211,14 +213,14 @@ export default function Header({ settings }: HeaderProps) {
                   onMouseLeave={() => setIsShopifyOpen(false)}
                 >
                   {shopifyMenu.items?.map((item, index) => (
-                    <Link
+                    <LocalizedLink
                       key={index}
                       href={item.href || '#'}
                       onClick={() => setIsShopifyOpen(false)}
                       className="block px-6 py-3 text-gray-900 hover:text-teal hover:bg-gray-50 transition-colors font-medium text-base"
                     >
                       {item.label}
-                    </Link>
+                    </LocalizedLink>
                   ))}
                 </div>
               )}
@@ -226,17 +228,20 @@ export default function Header({ settings }: HeaderProps) {
 
             {/* Main Nav Links */}
             {mainNavLinks.map((link, index) => (
-              <Link
+              <LocalizedLink
                 key={index}
                 href={link.href || '#'}
                 className="text-gray-900 hover:text-teal transition-colors font-medium text-base"
               >
                 {link.label}
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
 
           <div className="flex items-center gap-4">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+            
             {/* Cart Icon */}
             <button
               onClick={openCart}
@@ -251,12 +256,12 @@ export default function Header({ settings }: HeaderProps) {
               )}
             </button>
             
-            <Link
+            <LocalizedLink
               href={ctaButton.href || '/get-started'}
               className="hidden sm:inline-block bg-teal text-white px-6 py-2.5 font-semibold hover:bg-teal-dark transition-colors shadow-button text-base"
             >
               {ctaButton.label}
-            </Link>
+            </LocalizedLink>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="lg:hidden text-gray-900"
@@ -299,7 +304,7 @@ export default function Header({ settings }: HeaderProps) {
                 {isServicesOpen && (
                   <div className="pl-4 flex flex-col space-y-2">
                     {servicesMenu.items?.map((item, index) => (
-                      <Link
+                      <LocalizedLink
                         key={index}
                         href={item.href || '#'}
                         className="text-gray-600 hover:text-teal transition-colors text-base"
@@ -310,7 +315,7 @@ export default function Header({ settings }: HeaderProps) {
                         }}
                       >
                         {item.label}
-                      </Link>
+                      </LocalizedLink>
                     ))}
                   </div>
                 )}
@@ -338,7 +343,7 @@ export default function Header({ settings }: HeaderProps) {
                 {isShopifyOpen && (
                   <div className="pl-4 flex flex-col space-y-2">
                     {shopifyMenu.items?.map((item, index) => (
-                      <Link
+                      <LocalizedLink
                         key={index}
                         href={item.href || '#'}
                         className="text-gray-600 hover:text-teal transition-colors text-base"
@@ -349,7 +354,7 @@ export default function Header({ settings }: HeaderProps) {
                         }}
                       >
                         {item.label}
-                      </Link>
+                      </LocalizedLink>
                     ))}
                   </div>
                 )}
@@ -357,24 +362,29 @@ export default function Header({ settings }: HeaderProps) {
 
               {/* Mobile Main Nav Links */}
               {mainNavLinks.map((link, index) => (
-                <Link
+                <LocalizedLink
                   key={index}
                   href={link.href || '#'}
                   className="text-gray-900 hover:text-teal transition-colors font-medium text-base"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
-                </Link>
+                </LocalizedLink>
               ))}
 
+              {/* Mobile Language Switcher */}
+              <div className="pt-2 border-t border-gray-200">
+                <LanguageSwitcher />
+              </div>
+
               {/* Mobile CTA */}
-              <Link
+              <LocalizedLink
                 href={ctaButton.href || '/get-started'}
                 className="bg-teal text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-teal-dark transition-colors text-center shadow-button text-base"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {ctaButton.label}
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         )}

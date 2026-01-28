@@ -11,7 +11,13 @@
   },
   "dependencies": {
     "@portabletext/react": "^6.0.2",
+    "@sanity/assist": "^5.0.4",
+    "@sanity/document-internationalization": "^3.3.3",
     "@sanity/image-url": "^1.1.0",
+    "@sanity/locale-da-dk": "^1.0.23",
+    "@sanity/locale-de-de": "^1.1.28",
+    "@sanity/locale-nb-no": "^1.1.29",
+    "@sanity/locale-sv-se": "^1.2.28",
     "@sanity/structure": "^2.36.2",
     "@sanity/vision": "^3.99.0",
     "@types/three": "^0.182.0",

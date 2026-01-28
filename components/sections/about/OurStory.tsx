@@ -1,11 +1,14 @@
 'use client'
 
 import Image from 'next/image'
+import { urlFor } from '@/sanity/lib/image'
+import type { Image as SanityImage } from 'sanity'
 
 interface OurStoryData {
   title?: string
   description?: string
   imageUrl?: string
+  image?: SanityImage
   imageAlt?: string
 }
 
@@ -16,7 +19,9 @@ interface OurStoryProps {
 export default function OurStory({ ourStory }: OurStoryProps) {
   const title = ourStory?.title || 'Our story'
   const description = ourStory?.description || "We started ScandiCommerce in 2018 after years of frustration with traditional agency models. Too many proposals, unclear pricing, and scope creep were the norm. We asked ourselves: What if buying agency services felt like buying products? Clear features, transparent pricing, and no BS. Today, we're Norway's most transparent Shopify agency. Our clients know exactly what they're getting, what it costs, and when it will be delivered. No surprises, just results."
-  const imageUrl = ourStory?.imageUrl || '/images/about/story/banner.png'
+  const imageUrl = ourStory?.image
+    ? urlFor(ourStory.image).url()
+    : ourStory?.imageUrl || '/images/about/story/banner.png'
   const imageAlt = ourStory?.imageAlt || 'ScandiCommerce office space'
 
   return (

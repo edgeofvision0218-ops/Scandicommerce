@@ -2,6 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { urlFor } from '@/sanity/lib/image'
+import type { Image as SanityImage } from 'sanity'
 
 interface TeamMember {
   name?: string
@@ -9,6 +11,7 @@ interface TeamMember {
   specialties?: string
   funFact?: string
   imageUrl?: string
+  image?: SanityImage
 }
 
 interface MeetTheTeamData {
@@ -77,15 +80,19 @@ export default function MeetTheTeam({ meetTheTeam }: MeetTheTeamProps) {
 
         {/* Team Members */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-12 lg:mb-16">
-          {teamMembers.map((member, index) => (
+          {teamMembers.map((member, index) => {
+            const imageSrc = member.image
+              ? urlFor(member.image).url()
+              : member.imageUrl || '/images/about/team/placeholder.png'
+            return (
             <div key={index} className="relative group overflow-hidden">
               {/* Portrait Image */}
               <div className="relative w-full h-[130vw] sm:h-[600px] md:h-[650px] lg:h-[500px] xl:h-[600px] 2xl:h-[700px] bg-gray-200">
                 <Image
-                  src={member.imageUrl || '/images/about/team/placeholder.png'}
+                  src={imageSrc}
                   alt={member.name || 'Team member'}
                   fill
-                  className="object-cover"
+                  className="object-cover object-top"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
               </div>
@@ -106,7 +113,7 @@ export default function MeetTheTeam({ meetTheTeam }: MeetTheTeamProps) {
                 </p>
               </div>
             </div>
-          ))}
+          )})}
         </div>
 
         {/* CTA Button */}

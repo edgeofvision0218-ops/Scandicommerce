@@ -9,6 +9,7 @@ import { getShopifyProductByHandle } from '@/lib/shopify'
 import { notFound } from 'next/navigation'
 import { client } from '@/sanity/lib/client'
 import { packageDetailPageQuery } from '@/sanity/lib/queries'
+import { getQueryParams } from '@/sanity/lib/queryHelpers'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -135,7 +136,7 @@ export default async function PackageDetailPage({
   // Try to fetch from Sanity first
   const sanityData: PackageDetailPageData = await client.fetch(
     packageDetailPageQuery,
-    { slug },
+    getQueryParams({ slug }),
     { next: { revalidate: 0 } }
   )
 
@@ -269,7 +270,7 @@ export async function generateMetadata({
   // Try to fetch from Sanity first
   const sanityData: PackageDetailPageData = await client.fetch(
     packageDetailPageQuery,
-    { slug },
+    getQueryParams({ slug }),
     { next: { revalidate: 0 } }
   )
 

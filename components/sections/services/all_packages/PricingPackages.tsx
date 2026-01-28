@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import PackageAddToCart from './PackageAddToCart'
 
 interface Package {
   title: string
@@ -14,6 +15,8 @@ interface Package {
   included: string[]
   description: string
   href: string
+  shopifyVariantId?: string
+  shopifyProductTitle?: string
 }
 
 interface PackagesData {
@@ -144,12 +147,21 @@ function PackageCard({ pkg }: { pkg: Package }) {
             View Details
           </Link>
         )}
-        <Link
-          href="/contact"
-          className="border-2 border-gray-200 hover:border-gray-300 text-gray-700 text-sm lg:text-base font-semibold py-3 sm:py-3.5 px-4 text-center transition-colors duration-200 bg-white"
-        >
-          Book Call
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <Link
+            href="/contact"
+            className="border-2 border-gray-200 hover:border-gray-300 text-gray-700 text-sm lg:text-base font-semibold py-3 sm:py-3.5 px-4 text-center transition-colors duration-200 bg-white flex-1"
+          >
+            Book Call
+          </Link>
+          {pkg.shopifyVariantId && pkg.shopifyProductTitle && (
+            <PackageAddToCart
+              variantId={pkg.shopifyVariantId}
+              productTitle={pkg.shopifyProductTitle}
+              className="flex-1 min-w-0"
+            />
+          )}
+        </div>
       </div>
     </div>
   )
