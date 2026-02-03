@@ -19,16 +19,18 @@ export function isLocaleId(id: string): boolean {
   return LOCALE_IDS.includes(id);
 }
 
-/** Get language from pathname, e.g. /en/about → "en", /no/shopify/... → "no". Returns default if first segment is not a locale. */
+/** Get language from pathname, e.g. /en/about → "en", /EN/about → "en". Returns default if first segment is not a locale. */
 export function getLangFromPath(pathname: string): string {
   const segment = pathname.replace(/^\/+|\/+$/g, "").split("/")[0] || "";
-  return isLocaleId(segment) ? segment : defaultLanguage;
+  const segmentLower = segment.toLowerCase();
+  return isLocaleId(segmentLower) ? segmentLower : defaultLanguage;
 }
 
-/** Path without leading locale segment for path-based i18n. /en/about → /about, /no → / */
+/** Path without leading locale segment for path-based i18n. /en/about → /about, /EN/about → /about */
 export function getPathWithoutLang(pathname: string): string {
   const segments = pathname.replace(/^\/+/, "").split("/").filter(Boolean);
-  if (segments.length > 0 && isLocaleId(segments[0])) {
+  const first = segments[0]?.toLowerCase() ?? "";
+  if (segments.length > 0 && isLocaleId(first)) {
     segments.shift();
   }
   return segments.length ? `/${segments.join("/")}` : "/";

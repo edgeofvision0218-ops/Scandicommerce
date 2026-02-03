@@ -15,12 +15,13 @@ export default function MigrationCalculator() {
   const [numberOfProducts, setNumberOfProducts] = useState<string>('100')
   const [numberOfCustomers, setNumberOfCustomers] = useState<string>('100')
   const [numberOfOrders, setNumberOfOrders] = useState<string>('100')
+  const [numberOfBlogs, setNumberOfBlogs] = useState<string>('0')
   const [pricingData, setPricingData] = useState<PricingData | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
 
-  // Fetch pricing data from API
-  const fetchPricing = useCallback(async () => {
+  // Fetch pricing from API (proxies to Litextension price-all-in-one)
+  const fetchPricing = useCallback(async (signal?: AbortSignal) => {
     if (
       !sourcePlatform ||
       !targetPlatform ||
@@ -35,34 +36,45 @@ export default function MigrationCalculator() {
     setError('')
 
     try {
-      // Use our own API route to avoid CORS issues
-      const apiUrl = `/api/migration-pricing?source=${sourcePlatform}&target=${targetPlatform}&products=${numberOfProducts}&customers=${numberOfCustomers}&orders=${numberOfOrders}`
-      const response = await fetch(apiUrl)
+      const params = new URLSearchParams({
+        source: sourcePlatform,
+        target: targetPlatform,
+        products: numberOfProducts,
+        customers: numberOfCustomers,
+        orders: numberOfOrders,
+      })
+      if (numberOfBlogs && numberOfBlogs !== '0') {
+        params.set('blogs', numberOfBlogs)
+      }
+      const apiUrl = `/api/migration-pricing?${params.toString()}`
+      const response = await fetch(apiUrl, { method: 'GET', signal })
 
       if (!response.ok) {
-        throw new Error('Failed to fetch pricing data')
+        const errBody = await response.json().catch(() => ({}))
+        throw new Error(
+          (errBody as { error?: string }).error || 'Failed to fetch pricing'
+        )
       }
 
-      // Small projects (200-5,000 entities): 50-60% markup
-      // Medium projects (5,000-100,000 entities): 40% markup
-      // Large projects (100,000+ entities): 30-35% markup
+      const data = await response.json()
 
-      const data: PricingData = await response.json()
-      const totalProduct =
-        parseInt(numberOfProducts) +
-        parseInt(numberOfCustomers) +
-        parseInt(numberOfOrders)
-
-      if (totalProduct < 5000) {
-        data.price += data.price * 0.5
-      } else if (totalProduct > 5000 && totalProduct < 100000) {
-        data.price += data.price * 0.4
-      } else {
-        data.price += data.price * 0.3
+      // Validate API response shape { price, time }
+      if (
+        typeof data?.price !== 'number' ||
+        typeof data?.time !== 'number'
+      ) {
+        throw new Error('Invalid pricing response')
       }
-      setPricingData(data)
+
+      setPricingData({
+        price: data.price,
+        time: data.time,
+        estimated: data.estimated === true,
+      })
     } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return
       setError('Unable to fetch pricing. Please try again.')
+      setPricingData(null)
       console.error('API Error:', err)
     } finally {
       setLoading(false)
@@ -73,15 +85,20 @@ export default function MigrationCalculator() {
     numberOfProducts,
     numberOfCustomers,
     numberOfOrders,
+    numberOfBlogs,
   ])
 
-  // Fetch pricing when form values change
+  // Fetch pricing when form values change (debounced, cancel previous request)
   useEffect(() => {
+    const controller = new AbortController()
     const timeoutId = setTimeout(() => {
-      fetchPricing()
-    }, 500) // Debounce API calls
+      fetchPricing(controller.signal)
+    }, 500)
 
-    return () => clearTimeout(timeoutId)
+    return () => {
+      clearTimeout(timeoutId)
+      controller.abort()
+    }
   }, [fetchPricing])
 
   return (
@@ -237,6 +254,25 @@ export default function MigrationCalculator() {
                   onChange={(e) => setNumberOfOrders(e.target.value)}
                   className="w-full bg-white border border-[#E5E5E5] px-4 py-3 text-gray-900 text-base focus:outline-none focus:border-[#03C1CA] placeholder-gray-400"
                   placeholder="100"
+                  min="0"
+                />
+              </div>
+
+              {/* Number of Blogs */}
+              <div>
+                <label
+                  htmlFor="blogs"
+                  className="block text-sm font-medium text-gray-900 mb-2"
+                >
+                  Number of Blogs
+                </label>
+                <input
+                  type="number"
+                  id="blogs"
+                  value={numberOfBlogs}
+                  onChange={(e) => setNumberOfBlogs(e.target.value)}
+                  className="w-full bg-white border border-[#E5E5E5] px-4 py-3 text-gray-900 text-base focus:outline-none focus:border-[#03C1CA] placeholder-gray-400"
+                  placeholder="0"
                   min="0"
                 />
               </div>

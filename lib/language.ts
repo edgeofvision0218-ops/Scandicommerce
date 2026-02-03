@@ -4,10 +4,12 @@ import { defaultLanguage, isLocaleId } from '@/sanity/lib/languages'
 /**
  * Get the current language from path params ([lang]), cookies, or default (server-side).
  * Use in pages under app/[lang]/... via params.lang.
+ * Locale is normalized to lowercase so /EN/... and /en/... both resolve to "en".
  */
 export function getLanguageFromParams(params: { lang?: string }): string {
-  const lang = params?.lang
-  if (typeof lang === 'string' && isLocaleId(lang)) {
+  const raw = params?.lang
+  const lang = typeof raw === 'string' ? raw.toLowerCase() : ''
+  if (lang && isLocaleId(lang)) {
     return lang
   }
   return defaultLanguage

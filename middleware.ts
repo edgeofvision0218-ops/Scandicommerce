@@ -8,22 +8,29 @@ function firstSegment(pathname: string): string {
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
+  const seg = firstSegment(pathname)
+  const segLower = seg.toLowerCase()
+  const hasLocale = LOCALE_IDS.includes(segLower)
+
+  // Redirect uppercase locale to lowercase (e.g. /EN/about -> /en/about)
+  if (hasLocale && seg !== segLower) {
+    const rest = pathname.slice(seg.length) || ''
+    return NextResponse.redirect(new URL(`/${segLower}${rest}`, request.url))
+  }
+
   const response = NextResponse.next()
   response.headers.set('x-pathname', pathname)
   response.headers.set('x-url', request.url)
 
-  const seg = firstSegment(pathname)
-  const hasLocale = LOCALE_IDS.includes(seg)
-
   if (pathname === '/' || pathname === '') {
-    const preferLang = request.cookies.get('language')?.value
+    const preferLang = request.cookies.get('language')?.value?.toLowerCase()
     const lang = preferLang && LOCALE_IDS.includes(preferLang) ? preferLang : defaultLanguage
     return NextResponse.redirect(new URL(`/${lang}`, request.url))
   }
 
   // Redirect paths without locale prefix to /en/... (e.g. /about -> /en/about)
   if (!hasLocale && seg) {
-    const preferLang = request.cookies.get('language')?.value
+    const preferLang = request.cookies.get('language')?.value?.toLowerCase()
     const lang = preferLang && LOCALE_IDS.includes(preferLang) ? preferLang : defaultLanguage
     return NextResponse.redirect(new URL(`/${lang}${pathname}`, request.url))
   }
