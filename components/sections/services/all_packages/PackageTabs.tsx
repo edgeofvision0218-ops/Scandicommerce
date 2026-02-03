@@ -30,11 +30,10 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`min-w-[120px] sm:min-w-[150px] flex-1 px-4 py-4 text-sm sm:text-base font-medium transition-colors duration-200 border-l border-gray-200 first:border-l-0 whitespace-nowrap ${
-                    activeTab === tab.id
+                  className={`w-auto min-w-[120px] sm:min-w-[150px] shrink-0 p-2 sm:p-4 text-sm sm:text-base font-medium transition-colors duration-200 border-l border-gray-200 first:border-l-0 whitespace-nowrap ${activeTab === tab.id
                       ? 'bg-[#03C1CA] text-white'
                       : 'bg-white text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -43,15 +42,14 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
           </div>
 
           {/* Tab Content */}
-          <div 
-            className={`p-8 lg:p-12 min-h-[400px] ${
-              activeTab === 'reviews' 
-                ? 'bg-gradient-to-b from-[#F0F9FA] to-[#E0F4F6]' 
+          <div
+            className={`p-8 lg:p-12 min-h-[400px] ${activeTab === 'reviews'
+                ? 'bg-gradient-to-b from-[#F0F9FA] to-[#E0F4F6]'
                 : 'bg-[#F0F9FA]'
-            }`}
+              }`}
           >
             {activeTab === 'overview' && <IdealFor idealFor={pkg.idealFor} />}
-            
+
             {activeTab === 'included' && (
               <div className="space-y-10">
                 {pkg.includedCategories ? (
@@ -180,11 +178,10 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                           {[1, 2, 3, 4, 5].map((star) => (
                             <svg
                               key={star}
-                              className={`w-6 h-6 ${
-                                star <= review.rating
+                              className={`w-6 h-6 ${star <= review.rating
                                   ? 'text-amber-400'
                                   : 'text-gray-300'
-                              }`}
+                                }`}
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >

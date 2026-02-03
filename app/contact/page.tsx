@@ -33,13 +33,16 @@ interface ContactPageData {
     }[]
   }
   bookingSection?: {
+    enabled?: boolean
     label?: string
     title?: string
     description?: string
     meetingTypes?: {
       title?: string
       description?: string
+      durationMinutes?: number
     }[]
+    availableSlots?: { date?: string; times?: string[] }[]
     confirmButtonText?: string
   }
   messageSection?: {

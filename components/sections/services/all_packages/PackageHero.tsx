@@ -84,10 +84,10 @@ export default function PackageHero({ pkg, shopifyProduct }: PackageHeroProps) {
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 lg:gap-16">
           {/* Left Section - Package Details */}
           <div className="flex flex-col w-full lg:w-1/2 py-4">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black lg:text-gray-900 mb-3">
               {pkg.title}
             </h1>
-            <p className="text-base sm:text-lg text-gray-600 sm:mb-4 mb-2">
+            <p className="text-base sm:text-lg text-black lg:text-gray-600 sm:mb-4 mb-2">
               {pkg.subtitle}
             </p>
 
@@ -95,19 +95,19 @@ export default function PackageHero({ pkg, shopifyProduct }: PackageHeroProps) {
             {(pkg.rating > 0 || pkg.reviewCount > 0) && (
               <div className="flex items-center gap-2 sm:mb-5 mb-3">
                 <StarRating rating={pkg.rating || 0} />
-                <span className="text-gray-600 text-xs sm:text-sm">
+                <span className="text-black lg:text-gray-600 text-xs sm:text-sm">
                   {pkg.ratingValue || pkg.rating?.toFixed(1) || '0'} ({pkg.reviewCount || 0} reviews)
                 </span>
               </div>
             )}
 
             {/* Description */}
-            <p className="text-sm sm:text-base text-gray-600 sm:mb-8 mb-4 leading-relaxed max-w-lg">
+            <p className="text-sm sm:text-base text-black lg:text-gray-600 sm:mb-8 mb-4 leading-relaxed max-w-lg">
               {pkg.description}
             </p>
 
             {/* Package Highlights - Mobile/Tablet only (below 1024px) */}
-            <div className="lg:hidden sm:mb-8 mb-4 flex flex-col justify-start items-center">
+            <div className="lg:hidden sm:mb-8 mb-4 flex flex-col justify-start items-start">
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold sm:mb-6 mb-3 text-black">
                   Package Highlights
@@ -122,7 +122,7 @@ export default function PackageHero({ pkg, shopifyProduct }: PackageHeroProps) {
                     </li>
                   ))}
                 </ul>
-                <p className="text-gray-600 text-base sm:mt-4 mt-2">
+                <p className="text-black lg:text-gray-600 text-base sm:mt-4 mt-2">
                   +{pkg.moreDeliverablesCount !== undefined ? pkg.moreDeliverablesCount : (pkg.included.length - pkg.highlights.length)} more deliverables included
                 </p>
               </div>
@@ -130,14 +130,14 @@ export default function PackageHero({ pkg, shopifyProduct }: PackageHeroProps) {
 
             {/* Price with inline payment type */}
             <div className="flex items-baseline gap-3 mb-1">
-              <span className="text-2xl xs:text-3xl sm:text-4xl font-bold text-gray-900 font-mono tracking-tight">
+              <span className="text-lg xs:text-xl sm:text-2xl font-bold text-black lg:text-gray-900 font-mono tracking-tight">
                 {pkg.price}
               </span>
-              <span className="text-sm sm:text-base text-gray-500 font-sans">{pkg.priceType}</span>
+              <span className="text-sm sm:text-base text-black lg:text-gray-500 font-sans">{pkg.priceType}</span>
             </div>
 
             {/* Timeline */}
-            <p className="text-sm sm:text-base text-gray-600 sm:mb-6 mb-3">
+            <p className="text-sm sm:text-base text-black lg:text-gray-600 sm:mb-6 mb-3">
               Timeline: {pkg.timeline}
             </p>
 

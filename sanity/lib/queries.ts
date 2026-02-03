@@ -1117,12 +1117,18 @@ export const contactPageQuery = groq`
       }
     },
     bookingSection {
+      enabled,
       label,
       title,
       description,
       meetingTypes[] {
         title,
-        description
+        description,
+        durationMinutes
+      },
+      availableSlots[] {
+        date,
+        times
       },
       confirmButtonText
     },

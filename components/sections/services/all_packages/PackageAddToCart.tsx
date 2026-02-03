@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { HiShoppingBag, HiCheck } from 'react-icons/hi2'
 import { motion } from 'framer-motion'
 import { useCart } from '@/contexts/CartContext'
+import { Button } from '@/components/ui'
 
 interface PackageAddToCartProps {
   variantId: string
@@ -47,16 +48,13 @@ export default function PackageAddToCart({
 
   return (
     <div className={className}>
-      <button
+      <Button
         onClick={handleAddToCart}
         disabled={isAddingToCart || !variantId}
-        className={`w-full py-4 px-6 font-medium transition-all flex items-center justify-center gap-2 ${
-          isAddingToCart || !variantId
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : showSuccessMessage
-            ? 'bg-green-500 text-white'
-            : 'bg-[#03C1CA] text-white hover:bg-[#02A8B0]'
-        }`}
+        className={`${isAddingToCart || !variantId
+          ? '!bg-gray-300 text-gray-500 cursor-not-allowed'
+          : '!bg-[#03C1CA] text-white hover:bg-[#02A8B0]'
+          }`}
       >
         {isAddingToCart ? (
           <>
@@ -89,7 +87,7 @@ export default function PackageAddToCart({
             <span>Add to Cart</span>
           </>
         )}
-      </button>
+      </Button>
 
       {/* Error Message */}
       {error && (

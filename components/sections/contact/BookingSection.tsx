@@ -1,18 +1,26 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { FiClock, FiCheck, FiLoader } from 'react-icons/fi'
 
 interface MeetingTypeData {
   title?: string
   description?: string
+  durationMinutes?: number
+}
+
+interface DateSlot {
+  date?: string
+  times?: string[]
 }
 
 interface BookingSectionData {
+  enabled?: boolean
   label?: string
   title?: string
   description?: string
   meetingTypes?: MeetingTypeData[]
+  availableSlots?: DateSlot[]
   confirmButtonText?: string
 }
 
@@ -48,9 +56,11 @@ const defaultBenefits: BenefitData[] = [
 interface CalendarProps {
   selectedDate: string | null
   onDateSelect: (date: string) => void
+  /** When set, only these dates (YYYY-MM-DD) are selectable. When null/empty, any future date is selectable. */
+  allowedDates?: Set<string> | null
 }
 
-function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
+function Calendar({ selectedDate, onDateSelect, allowedDates }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   
   const monthName = currentMonth.toLocaleString('en-US', { month: 'long', year: 'numeric' })
@@ -80,8 +90,15 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
     return date < today
   }
 
+  const isAllowed = (day: number): boolean => {
+    const dateStr = formatDate(day)
+    if (!allowedDates || allowedDates.size === 0) return true
+    return allowedDates.has(dateStr)
+  }
+
   const handleDateClick = (day: number) => {
     if (isPast(day)) return
+    if (!isAllowed(day)) return
     onDateSelect(formatDate(day))
   }
 
@@ -103,15 +120,17 @@ function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
     for (let day = 1; day <= daysInMonth; day++) {
       const isDaySelected = isSelected(day)
       const isDayPast = isPast(day)
+      const dayAllowed = isAllowed(day)
       const isWeekend = (adjustedFirstDay + day - 1) % 7 >= 5
+      const disabled = isDayPast || !dayAllowed
 
       cells.push(
         <button
           key={day}
           onClick={() => handleDateClick(day)}
-          disabled={isDayPast}
+          disabled={disabled}
           className={`h-10 w-10 flex items-center justify-center text-sm font-medium transition-colors mx-auto
-            ${isDaySelected ? 'bg-[#03C1CA] text-white' : isDayPast ? 'text-gray-300 cursor-not-allowed' : isWeekend ? 'text-gray-400' : 'text-gray-700 hover:bg-gray-100'}
+            ${isDaySelected ? 'bg-[#03C1CA] text-white' : disabled ? 'text-gray-300 cursor-not-allowed' : isWeekend ? 'text-gray-400' : 'text-gray-700 hover:bg-gray-100'}
           `}
         >
           {day}
@@ -236,8 +255,64 @@ interface ContactFormProps {
 }
 
 function ContactForm({ submitButtonText }: ContactFormProps) {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [company, setCompany] = useState('')
+  const [interest, setInterest] = useState('')
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    setSuccess(false)
+
+    if (!email.trim() || !message.trim()) {
+      setError('Please enter your email and message.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: firstName.trim() || undefined,
+          lastName: lastName.trim() || undefined,
+          email: email.trim(),
+          company: company.trim() || undefined,
+          interest: interest || undefined,
+          message: message.trim()
+        })
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Failed to send message.')
+        return
+      }
+
+      setSuccess(true)
+      setFirstName('')
+      setLastName('')
+      setEmail('')
+      setCompany('')
+      setInterest('')
+      setMessage('')
+      setTimeout(() => setSuccess(false), 5000)
+    } catch {
+      setError('Failed to send message. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <form className="bg-white">
+    <form className="bg-white" onSubmit={handleSubmit}>
       <div className="px-9 py-6 flex flex-col justify-between gap-9">
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -245,6 +320,8 @@ function ContactForm({ submitButtonText }: ContactFormProps) {
             <input
               type="text"
               placeholder="John"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none"
             />
           </div>
@@ -253,15 +330,20 @@ function ContactForm({ submitButtonText }: ContactFormProps) {
             <input
               type="text"
               placeholder="Doe"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none"
             />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
           <input
             type="email"
             placeholder="john@company.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
             className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none"
           />
         </div>
@@ -270,12 +352,18 @@ function ContactForm({ submitButtonText }: ContactFormProps) {
           <input
             type="text"
             placeholder="Your Company AS"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
             className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">What are you interested in?</label>
-          <select className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-gray-500 outline-none">
+          <select
+            value={interest}
+            onChange={(e) => setInterest(e.target.value)}
+            className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-gray-500 outline-none"
+          >
             <option value="">Select a service</option>
             <option value="shopify-development">Shopify Development</option>
             <option value="migration">Migration Services</option>
@@ -285,18 +373,39 @@ function ContactForm({ submitButtonText }: ContactFormProps) {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Message *</label>
           <textarea
             placeholder="Tell us about your project..."
             rows={4}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            required
             className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none resize-none"
           />
         </div>
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
+        {success && (
+          <div className="p-3 bg-green-50 border border-green-200 rounded">
+            <p className="text-sm text-green-600">Message sent! We&apos;ll get back to you soon.</p>
+          </div>
+        )}
         <button
           type="submit"
-          className="w-full bg-[#03C1CA] text-white py-3  font-semibold hover:bg-[#02a8b0] transition-colors"
+          disabled={loading}
+          className={`w-full bg-[#03C1CA] text-white py-3 font-semibold hover:bg-[#02a8b0] transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          {submitButtonText || 'Send Message'}
+          {loading ? (
+            <span className="flex items-center justify-center">
+              <FiLoader className="animate-spin mr-2" size={16} />
+              Sending...
+            </span>
+          ) : (
+            submitButtonText || 'Send Message'
+          )}
         </button>
       </div>
     </form>
@@ -340,19 +449,37 @@ export default function BookingSection({ bookingSection, messageSection, benefit
 
   const benefitsList = benefits && benefits.length > 0 ? benefits : defaultBenefits
 
+  const availableSlots = bookingSection?.availableSlots && bookingSection.availableSlots.length > 0
+    ? bookingSection.availableSlots
+    : null
+
+  const allowedDates = useMemo(() => {
+    if (!availableSlots?.length) return null
+    return new Set(availableSlots.map((s) => s.date).filter(Boolean) as string[])
+  }, [availableSlots])
+
   function loadSlots(selectedDate: string) {
     setDate(selectedDate)
     setSlots([])
     setTime(null)
     setError(null)
 
-    const WORK_START = 9
-    const WORK_END = 17
     const SLOT_MINUTES = 60
-
     let slots: string[] = []
-    for (let h = WORK_START; h < WORK_END; h++) {
-      slots.push(String(h).padStart(2, '0') + ':00')
+
+    if (availableSlots && availableSlots.length > 0) {
+      const slotForDate = availableSlots.find((s) => s.date === selectedDate)
+      if (slotForDate?.times && slotForDate.times.length > 0) {
+        slots = [...slotForDate.times].sort()
+      }
+    }
+
+    if (slots.length === 0 && (!availableSlots || availableSlots.length === 0)) {
+      const WORK_START = 9
+      const WORK_END = 17
+      for (let h = WORK_START; h < WORK_END; h++) {
+        slots.push(String(h).padStart(2, '0') + ':00')
+      }
     }
 
     // For today, hide slots that have already passed
@@ -366,7 +493,9 @@ export default function BookingSection({ bookingSection, messageSection, benefit
     if (selectedDate === today) {
       const nowM = now.getHours() * 60 + now.getMinutes()
       slots = slots.filter((s) => {
-        const [h, m] = s.split(':').map(Number)
+        const parts = s.split(':').map(Number)
+        const h = parts[0] ?? 0
+        const m = parts[1] ?? 0
         return h * 60 + m + SLOT_MINUTES > nowM
       })
     }
@@ -385,7 +514,9 @@ export default function BookingSection({ bookingSection, messageSection, benefit
 
     try {
       const selectedMeetingType = meetingTypes[meetingType]
-      const duration = selectedMeetingType?.title?.includes('60') ? 60 : 30
+      const duration =
+        selectedMeetingType?.durationMinutes ??
+        (selectedMeetingType?.title?.includes('60') ? 60 : 30)
 
       const res = await fetch('/api/calendar/book', {
         method: 'POST',
@@ -422,109 +553,117 @@ export default function BookingSection({ bookingSection, messageSection, benefit
     }
   }
 
+  const bookingEnabled = bookingSection?.enabled !== false
+
   return (
     <section className="py-12 lg:py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          <div
-            className="bg-[#F5F5F5B3] border border-[#5654544D] overflow-hidden"
-            style={{
-              boxShadow: '0px 15px 22px 0px rgba(84, 114, 115, 0.12), 10px 45px 35px 0px rgba(0, 0, 0, 0.03)'
-            }}
-          >
-            <div className="p-[50px_29px_34px_29px]">
-              <span className="inline-block text-xs font-semibold text-white bg-[#03C1CA] px-3 py-1 mb-4">
-                {bookingLabel}
-              </span>
-              <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2">
-                {bookingTitle}
-              </h2>
-              <p className="text-sm text-gray-500 mb-6">
-                {bookingDescription}
-              </p>
+        <div className={`grid grid-cols-1 gap-8 lg:gap-12 ${bookingEnabled ? 'lg:grid-cols-2' : 'max-w-2xl mx-auto'}`}>
+          {bookingEnabled && (
+            <div
+              className="bg-[#F5F5F5B3] border border-[#5654544D] overflow-hidden"
+              style={{
+                boxShadow: '0px 15px 22px 0px rgba(84, 114, 115, 0.12), 10px 45px 35px 0px rgba(0, 0, 0, 0.03)'
+              }}
+            >
+              <div className="p-[50px_29px_34px_29px]">
+                <span className="inline-block text-xs font-semibold text-white bg-[#03C1CA] px-3 py-1 mb-4">
+                  {bookingLabel}
+                </span>
+                <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2">
+                  {bookingTitle}
+                </h2>
+                <p className="text-sm text-gray-500 mb-6">
+                  {bookingDescription}
+                </p>
 
-              <div className="bg-white p-4">
-                <div className="space-y-4 mb-6">
-                  <h4 className="text-sm font-semibold text-gray-900">Meeting Type</h4>
-                  {meetingTypes.map((mt, index) => (
-                    <MeetingType
-                      key={index}
-                      title={mt.title || ''}
-                      description={mt.description || ''}
-                      selected={meetingType === index}
-                      onSelect={() => setMeetingType(index)}
-                    />
-                  ))}
-                </div>
-
-                <Calendar selectedDate={date} onDateSelect={loadSlots} />
-                <TimeSlots
-                  slots={slots}
-                  selectedTime={time}
-                  onTimeSelect={setTime}
-                  loading={false}
-                />
-
-                <div className="mt-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="John Doe"
-                      required
-                      className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none"
-                    />
+                <div className="bg-white p-4">
+                  <div className="space-y-4 mb-6">
+                    <h4 className="text-sm font-semibold text-gray-900">Meeting Type</h4>
+                    {meetingTypes.map((mt, index) => (
+                      <MeetingType
+                        key={index}
+                        title={mt.title || ''}
+                        description={mt.description || ''}
+                        selected={meetingType === index}
+                        onSelect={() => setMeetingType(index)}
+                      />
+                    ))}
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="john@company.com"
-                      required
-                      className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none"
-                    />
-                  </div>
-                </div>
 
-                {error && (
-                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded">
-                    <p className="text-sm text-red-600">{error}</p>
-                  </div>
-                )}
+                  <Calendar
+                    selectedDate={date}
+                    onDateSelect={loadSlots}
+                    allowedDates={allowedDates}
+                  />
+                  <TimeSlots
+                    slots={slots}
+                    selectedTime={time}
+                    onTimeSelect={setTime}
+                    loading={false}
+                  />
 
-                {success && (
-                  <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded">
-                    <p className="text-sm text-green-600">
-                      Booking confirmed! A calendar invite has been sent to your email.
-                    </p>
+                  <div className="mt-6 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="John Doe"
+                        required
+                        className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="john@company.com"
+                        required
+                        className="w-full px-3 py-2 bg-[#F5F5F5] text-sm text-black outline-none"
+                      />
+                    </div>
                   </div>
-                )}
 
-                <button
-                  onClick={book}
-                  disabled={loading || !date || !time || !name || !email}
-                  className={`w-full mt-6 bg-[#03C1CA] text-white py-3 font-semibold hover:bg-[#02a8b0] transition-colors ${
-                    loading || !date || !time || !name || !email
-                      ? 'opacity-50 cursor-not-allowed'
-                      : ''
-                  }`}
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center">
-                      <FiLoader className="animate-spin mr-2" size={16} />
-                      Creating booking...
-                    </span>
-                  ) : (
-                    confirmButtonText
+                  {error && (
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded">
+                      <p className="text-sm text-red-600">{error}</p>
+                    </div>
                   )}
-                </button>
+
+                  {success && (
+                    <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded">
+                      <p className="text-sm text-green-600">
+                        Booking confirmed! A calendar invite has been sent to your email.
+                      </p>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={book}
+                    disabled={loading || !date || !time || !name || !email}
+                    className={`w-full mt-6 bg-[#03C1CA] text-white py-3 font-semibold hover:bg-[#02a8b0] transition-colors ${
+                      loading || !date || !time || !name || !email
+                        ? 'opacity-50 cursor-not-allowed'
+                        : ''
+                    }`}
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center">
+                        <FiLoader className="animate-spin mr-2" size={16} />
+                        Creating booking...
+                      </span>
+                    ) : (
+                      confirmButtonText
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="flex flex-col justify-between">
             <div className="bg-[#F5F5F5B2] shadow-lg border border-[#5654544D] overflow-hidden">

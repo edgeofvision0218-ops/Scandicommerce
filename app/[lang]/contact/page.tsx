@@ -22,10 +22,12 @@ interface ContactPageData {
     cards?: { icon?: string; title?: string; subtitle?: string; detail?: string; href?: string }[]
   }
   bookingSection?: {
+    enabled?: boolean
     label?: string
     title?: string
     description?: string
-    meetingTypes?: { title?: string; description?: string }[]
+    meetingTypes?: { title?: string; description?: string; durationMinutes?: number }[]
+    availableSlots?: { date?: string; times?: string[] }[]
     confirmButtonText?: string
   }
   messageSection?: {

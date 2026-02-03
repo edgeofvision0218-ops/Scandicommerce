@@ -12,13 +12,13 @@ function LanguageSwitcherPlaceholder() {
   return (
     <div className="relative">
       <div
-        className="flex gap-2 px-3 py-2 text-gray-900 font-medium text-sm border border-gray-200 rounded-lg"
+        className="flex items-center gap-1 sm:gap-1.5 px-2 py-1.5 text-gray-900 font-medium text-xs border border-gray-200 rounded-md min-w-0"
         aria-hidden
       >
-        <Globe className="w-4 h-4" />
-        <span className="hidden sm:inline">{defaultLangTitle}</span>
-        <span className="sm:hidden">{defaultCode}</span>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <Globe className="w-3.5 h-3.5 flex-shrink-0" />
+        <span className="hidden xs:inline truncate">{defaultLangTitle}</span>
+        <span className="xs:hidden flex-shrink-0">{defaultCode}</span>
+        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </div>
@@ -63,17 +63,17 @@ function LanguageSwitcherInner() {
   const currentLang = availableLanguages.find((lang) => lang.id === currentLanguage)
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative min-w-0" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-gray-900 hover:text-teal transition-colors font-medium text-sm border border-gray-200 rounded-lg hover:border-teal"
+        className="flex items-center gap-1 sm:gap-1.5 px-2 py-1.5 text-gray-900 hover:text-teal transition-colors font-medium text-xs border border-gray-200 rounded-md hover:border-teal min-w-0"
         aria-label="Select language"
       >
-        <Globe className="w-4 h-4" />
-        <span className="hidden sm:inline">{currentLang?.title || currentLanguage.toUpperCase()}</span>
-        <span className="sm:hidden">{currentLanguage.toUpperCase()}</span>
+        <Globe className="w-3.5 h-3.5 flex-shrink-0" />
+        <span className="hidden xs:inline truncate max-w-[4.5rem] sm:max-w-none">{currentLang?.title || currentLanguage.toUpperCase()}</span>
+        <span className="xs:hidden flex-shrink-0">{currentLanguage.toUpperCase()}</span>
         <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-3.5 h-3.5 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -83,12 +83,12 @@ function LanguageSwitcherInner() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+        <div className="absolute right-0 mt-1.5 w-40 sm:w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1.5 z-[10002]">
           {availableLanguages.map((lang) => (
             <button
               key={lang.id}
               onClick={() => handleLanguageChange(lang.id)}
-              className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+              className={`w-full text-left px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm transition-colors ${
                 currentLanguage === lang.id
                   ? 'bg-teal/10 text-teal font-semibold'
                   : 'text-gray-900 hover:bg-gray-50 hover:text-teal'

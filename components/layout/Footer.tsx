@@ -121,7 +121,7 @@ export default function Footer({ settings }: FooterProps) {
     <footer className="w-full bg-black text-white mt-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
         {/* Main Footer Grid */}
-        <div className="grid lg:flex justify-between xl:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-2 xl:gap-6 2xl:gap-8 mb-8 sm:mb-10 lg:mb-12">
+        <div className="grid lg:flex justify-between xl:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10 sm:gap-12 lg:gap-2 xl:gap-6 2xl:gap-8 mb-8 sm:mb-10 lg:mb-12">
           {/* Logo - Full width on mobile, scales gradually on desktop */}
           <div className="col-span-2 sm:col-span-3 lg:col-span-1 mb-4 sm:mb-6 lg:mb-0">
             <div className="w-[170px] lg:w-[120px] xl:w-[150px] 2xl:w-[185px]">

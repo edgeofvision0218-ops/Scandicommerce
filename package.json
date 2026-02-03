@@ -29,6 +29,7 @@
     "motion": "^12.26.1",
     "next": "^14.1.0",
     "next-sanity": "7.1.4",
+    "nodemailer": "^6.10.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.5",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
+    "@types/nodemailer": "^6.4.22",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.17",
