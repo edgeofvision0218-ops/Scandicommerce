@@ -1050,6 +1050,15 @@ export const aboutPageQuery = groq`
   }
 `;
 
+// Partner Categories (dynamic filter list for partners page)
+export const partnerCategoriesQuery = groq`
+  *[_type == "partnerCategory"] {
+    _id,
+    title,
+    icon
+  }
+`;
+
 // Partners Page Query
 export const partnersPageQuery = groq`
   *[_type == "partnersPage" && (language == $language || !defined(language))][0] {
@@ -1075,10 +1084,19 @@ export const partnersPageQuery = groq`
       partners[] {
         name,
         category,
+        "categories": categories[]->{ _id, title, icon },
         description,
         benefits,
-        "imageUrl": image.asset->url,
-        "logoUrl": logo.asset->url
+        "image": image {
+          "asset": asset->,
+          crop,
+          hotspot
+        },
+        "logo": logo {
+          "asset": asset->,
+          crop,
+          hotspot
+        }
       }
     },
     cta {

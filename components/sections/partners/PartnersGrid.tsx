@@ -1,14 +1,28 @@
 'use client'
 
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, type ComponentType } from 'react'
 import PartnerCard, { Partner } from './PartnerCard'
-import { Search, X, ChevronDown, ShoppingBag, Mail, Headphones, Star, Compass } from 'lucide-react'
+import { Search, X, ChevronDown, ChevronUp, ShoppingBag, Mail, Headphones, Star, Compass, Package, LayoutGrid, Truck, MapPin, CreditCard } from 'lucide-react'
+import { urlFor } from '@/sanity/lib/image'
+import type { Image as SanityImage } from 'sanity'
+
+export interface PartnerCategoryItem {
+  _id: string
+  title: string
+  icon?: string
+}
 
 interface PartnerData {
   name?: string
   category?: string
+  categories?: PartnerCategoryItem[] | string[]
   description?: string
   benefits?: string[]
+  /** Full Sanity image (crop/hotspot applied when building URL) */
+  image?: SanityImage
+  /** Full Sanity image for logo */
+  logo?: SanityImage
+  /** Fallback URL when image comes from non-Sanity source */
   imageUrl?: string
   logoUrl?: string
 }
@@ -19,14 +33,17 @@ interface PartnersGridData {
 
 interface PartnersGridProps {
   partnersGrid?: PartnersGridData
+  /** Dynamic category list from Sanity (Partner Categories). When set, filters and sections use this order; otherwise static list is used. */
+  categoryList?: PartnerCategoryItem[]
 }
 
-// Default partners
+// Default partners (used when no Sanity data; add Categories in Sanity for ERP, OMS, Shipping, Logistics, POS)
 const defaultPartners: Partner[] = [
   {
     id: 1,
     name: 'Shopify Plus',
     category: 'Platform',
+    categories: ['Platform'],
     description: 'Official Shopify Plus partner since 2018. Direct access to Shopify resources and priority support.',
     benefits: ['Priority support access', 'Beta feature access', 'Direct Shopify contacts'],
     image: '/images/partners/partnerGrid/shopify-plus.jpg',
@@ -35,6 +52,7 @@ const defaultPartners: Partner[] = [
     id: 2,
     name: 'Klaviyo',
     category: 'Email & SMS',
+    categories: ['Email & SMS'],
     description: 'Certified Klaviyo partner for email marketing, SMS, and customer data management.',
     benefits: ['Advanced segmentation', 'Revenue attribution', 'Automated flows'],
     image: '/images/partners/partnerGrid/klaviyo.png',
@@ -43,6 +61,7 @@ const defaultPartners: Partner[] = [
     id: 3,
     name: 'Gorgias',
     category: 'Customer Support',
+    categories: ['Customer Support'],
     description: 'Helpdesk integration for seamless customer support connected to your store data.',
     benefits: ['Unified customer view', 'Automated responses', 'Revenue tracking'],
     image: '/images/partners/partnerGrid/gorgias.jpg',
@@ -51,6 +70,7 @@ const defaultPartners: Partner[] = [
     id: 4,
     name: 'Yotpo',
     category: 'Reviews & UGC',
+    categories: ['Reviews & UGC'],
     description: 'Product reviews, ratings, and user-generated content to build trust and increase conversions.',
     benefits: ['Review collection', 'SEO-friendly reviews', 'Photo reviews'],
     image: '/images/partners/partnerGrid/yotpo.jpg',
@@ -59,6 +79,7 @@ const defaultPartners: Partner[] = [
     id: 5,
     name: 'Okendo',
     category: 'Reviews',
+    categories: ['Reviews'],
     description: 'Advanced review platform with attributes, surveys, and rich customer insights.',
     benefits: ['Attribute-based reviews', 'Customer surveys', 'Rich insights'],
     image: '/images/partners/partnerGrid/okendo.jpg',
@@ -68,6 +89,7 @@ const defaultPartners: Partner[] = [
     id: 6,
     name: 'Stamped',
     category: 'Loyalty',
+    categories: ['Loyalty'],
     description: 'Loyalty programs and rewards to increase customer lifetime value.',
     benefits: ['Points & rewards', 'Referral programs', 'VIP tiers'],
     image: '/images/partners/partnerGrid/stamped.jpg',
@@ -77,6 +99,7 @@ const defaultPartners: Partner[] = [
     id: 7,
     name: 'Nosto',
     category: 'Personalization',
+    categories: ['Personalization'],
     description: 'AI-powered personalization for product recommendations and content.',
     benefits: ['Smart recommendations', 'A/B testing', 'Behavioral targeting'],
     image: '/images/partners/partnerGrid/nosto.png',
@@ -85,20 +108,67 @@ const defaultPartners: Partner[] = [
     id: 8,
     name: 'Algolia',
     category: 'Search',
+    categories: ['Search'],
     description: 'Lightning-fast search with typo-tolerance and smart merchandising.',
     benefits: ['Instant search', 'Smart ranking', 'Analytics'],
     image: '/images/partners/partnerGrid/algolia.jpg',
   },
+  // Example ERP/OMS/Shipping/Logistics/POS partners — replace with real partners and images in Sanity
+  {
+    id: 9,
+    name: 'ERP & OMS Partner',
+    category: 'ERP',
+    categories: ['ERP', 'OMS'],
+    description: 'Enterprise resource planning and order management integrations for unified operations.',
+    benefits: ['Inventory sync', 'Order routing', 'Multi-channel fulfillment'],
+    image: '/images/partners/partnerGrid/shopify-plus.jpg',
+  },
+  {
+    id: 10,
+    name: 'Shipping & Logistics',
+    category: 'Shipping',
+    categories: ['Shipping', 'Logistics'],
+    description: 'Shipping, fulfillment, and logistics solutions for domestic and international delivery.',
+    benefits: ['Rates & labels', 'Tracking', 'Warehouse integration'],
+    image: '/images/partners/partnerGrid/shopify-plus.jpg',
+  },
+  {
+    id: 11,
+    name: 'POS Partner',
+    category: 'POS',
+    categories: ['POS'],
+    description: 'Point-of-sale and in-store solutions integrated with your Shopify store.',
+    benefits: ['Unified inventory', 'In-person payments', 'Offline mode'],
+    image: '/images/partners/partnerGrid/shopify-plus.jpg',
+  },
 ]
 
-// Category groupings for cleaner organization
+// Category groupings: priority order (Platform first, then ERP/OMS/Shipping/Logistics/POS, then rest)
 const categoryGroups: Record<string, string[]> = {
   'Platform': ['Platform'],
+  'ERP': ['ERP'],
+  'OMS': ['OMS'],
+  'Shipping': ['Shipping'],
+  'Logistics': ['Logistics'],
+  'POS': ['POS'],
   'Marketing': ['Email & SMS', 'Personalization'],
   'Customer Experience': ['Customer Support', 'Loyalty'],
   'Reviews & Content': ['Reviews', 'Reviews & UGC'],
   'Discovery': ['Search'],
 }
+
+const GROUP_ORDER = [
+  'Platform',
+  'ERP',
+  'OMS',
+  'Shipping',
+  'Logistics',
+  'POS',
+  'Marketing',
+  'Customer Experience',
+  'Reviews & Content',
+  'Discovery',
+]
 
 // Get display group for a category
 function getCategoryGroup(category: string): string {
@@ -116,6 +186,16 @@ function getCategoryIcon(group: string, size: 'sm' | 'md' = 'md') {
   switch (group) {
     case 'Platform':
       return <ShoppingBag className={iconClass} />
+    case 'ERP':
+      return <Package className={iconClass} />
+    case 'OMS':
+      return <LayoutGrid className={iconClass} />
+    case 'Shipping':
+      return <Truck className={iconClass} />
+    case 'Logistics':
+      return <MapPin className={iconClass} />
+    case 'POS':
+      return <CreditCard className={iconClass} />
     case 'Marketing':
       return <Mail className={iconClass} />
     case 'Customer Experience':
@@ -129,74 +209,130 @@ function getCategoryIcon(group: string, size: 'sm' | 'md' = 'md') {
   }
 }
 
-export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
+const ICON_MAP: Record<string, ComponentType<{ className?: string }>> = {
+  ShoppingBag,
+  Package,
+  LayoutGrid,
+  Truck,
+  MapPin,
+  CreditCard,
+  Mail,
+  Headphones,
+  Star,
+  Compass,
+}
+
+export default function PartnersGrid({ partnersGrid, categoryList }: PartnersGridProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [expandedPartnerId, setExpandedPartnerId] = useState<number | null>(null)
+  const [quickJumpExpanded, setQuickJumpExpanded] = useState(false)
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
+  const useDynamicCategories = Array.isArray(categoryList) && categoryList.length > 0
+
   const partners: Partner[] = partnersGrid?.partners && partnersGrid.partners.length > 0
-    ? partnersGrid.partners.map((p, index) => ({
-      id: index + 1,
-      name: p.name || '',
-      category: p.category || '',
-      description: p.description || '',
-      benefits: p.benefits || [],
-      image: p.imageUrl || '',
-      logo: p.logoUrl,
-    }))
+    ? partnersGrid.partners.map((p, index) => {
+      const raw = Array.isArray(p.categories) && p.categories.length > 0
+        ? p.categories
+        : p.category ? [p.category] : []
+      const categories: string[] = raw.map(c =>
+        typeof c === 'string' ? c : (c && 'title' in c ? c.title : '')
+      ).filter(Boolean)
+      const primaryCategory = categories[0] || (typeof p.category === 'string' ? p.category : '') || ''
+      const imageUrl = p.image ? urlFor(p.image).url() : (p.imageUrl || '')
+      const logoUrl = p.logo ? urlFor(p.logo).url() : p.logoUrl
+      return {
+        id: index + 1,
+        name: p.name || '',
+        category: primaryCategory,
+        categories,
+        description: p.description || '',
+        benefits: p.benefits || [],
+        image: imageUrl,
+        logo: logoUrl,
+      }
+    })
     : defaultPartners
 
-  // Extract unique categories
-  const categories = useMemo(() => {
+  // Category titles present on at least one partner
+  const categoriesFromPartners = useMemo(() => {
     const cats = new Set<string>()
     partners.forEach(p => {
-      if (p.category) cats.add(p.category)
+      if (p.categories?.length) p.categories.forEach(c => c && cats.add(c))
+      else if (p.category) cats.add(p.category)
     })
-    return Array.from(cats).sort()
+    return Array.from(cats)
   }, [partners])
 
-  // Get unique category groups
+  // Ordered list of group keys: from Sanity when available (sorted by partner count, most first), else static order
   const uniqueGroups = useMemo(() => {
+    if (useDynamicCategories && categoryList) {
+      const countByTitle: Record<string, number> = {}
+      partners.forEach(p => {
+        const tags = p.categories?.length ? p.categories : (p.category ? [p.category] : [])
+        tags.forEach(t => { countByTitle[t] = (countByTitle[t] ?? 0) + 1 })
+      })
+      return [...categoryList]
+        .sort((a, b) => (countByTitle[b.title] ?? 0) - (countByTitle[a.title] ?? 0))
+        .map(c => c.title)
+    }
     const groups = new Set<string>()
-    categories.forEach(cat => {
-      groups.add(getCategoryGroup(cat))
-    })
-    // Sort groups in a logical order
-    const orderedGroups = ['Platform', 'Marketing', 'Customer Experience', 'Reviews & Content', 'Discovery']
-    return orderedGroups.filter(g => groups.has(g))
-  }, [categories])
+    categoriesFromPartners.forEach(cat => groups.add(getCategoryGroup(cat)))
+    return GROUP_ORDER.filter(g => groups.has(g))
+  }, [useDynamicCategories, categoryList, categoriesFromPartners, partners])
+
+  const QUICK_JUMP_VISIBLE = 6
+  const hasMoreCategories = uniqueGroups.length > QUICK_JUMP_VISIBLE
+
+  const getGroupKey = useMemo(() => {
+    if (useDynamicCategories) return (cat: string) => cat
+    return getCategoryGroup
+  }, [useDynamicCategories])
+
+  const getCategoryIconForGroup = (groupTitle: string, size: 'sm' | 'md' = 'md') => {
+    const iconClass = size === 'sm' ? "w-4 h-4" : "w-6 h-6 text-[#03C1CA]"
+    if (useDynamicCategories && categoryList) {
+      const cat = categoryList.find(c => c.title === groupTitle)
+      if (cat?.icon && ICON_MAP[cat.icon]) {
+        const Icon = ICON_MAP[cat.icon]
+        return <Icon className={iconClass} />
+      }
+    }
+    return getCategoryIcon(groupTitle, size)
+  }
 
   // Filter partners based on search and category
   const filteredPartners = useMemo(() => {
     return partners.filter(partner => {
+      const tags = partner.categories?.length ? partner.categories : (partner.category ? [partner.category] : [])
       const matchesSearch = searchQuery === '' ||
         partner.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         partner.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        partner.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())) ||
         partner.benefits.some(b => b.toLowerCase().includes(searchQuery.toLowerCase()))
 
+      const partnerGroups = new Set(tags.map(t => getGroupKey(t)))
       const matchesCategory = selectedCategory === null ||
-        getCategoryGroup(partner.category) === selectedCategory
+        partnerGroups.has(selectedCategory)
 
       return matchesSearch && matchesCategory
     })
-  }, [partners, searchQuery, selectedCategory])
+  }, [partners, searchQuery, selectedCategory, getGroupKey])
 
-  // Group filtered partners by category group
+  // Group partners: each partner appears in every category group they're tagged with
   const groupedPartners = useMemo(() => {
     const groups: Record<string, Partner[]> = {}
-
+    const tags = (p: Partner) => p.categories?.length ? p.categories : (p.category ? [p.category] : [])
     filteredPartners.forEach(partner => {
-      const group = getCategoryGroup(partner.category)
-      if (!groups[group]) {
-        groups[group] = []
-      }
-      groups[group].push(partner)
+      const partnerGroups = new Set(tags(partner).map(t => getGroupKey(t)))
+      partnerGroups.forEach(group => {
+        if (!groups[group]) groups[group] = []
+        groups[group].push(partner)
+      })
     })
-
     return groups
-  }, [filteredPartners])
+  }, [filteredPartners, getGroupKey])
 
   // Scroll to section
   const scrollToSection = (group: string) => {
@@ -274,7 +410,10 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                 All Partners
               </button>
               {uniqueGroups.map(group => {
-                const groupCount = partners.filter(p => getCategoryGroup(p.category) === group).length
+                const groupCount = partners.filter(p => {
+                  const tags = p.categories?.length ? p.categories : (p.category ? [p.category] : [])
+                  return tags.some(t => getGroupKey(t) === group)
+                }).length
                 return (
                   <button
                     key={group}
@@ -287,7 +426,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                       }`}
                   >
                     <span className={`${selectedCategory === group ? 'text-white' : 'text-[#03C1CA]'}`}>
-                      {getCategoryIcon(group, 'sm')}
+                      {getCategoryIconForGroup(group, 'sm')}
                     </span>
                     {group}
                     <span className={`text-xs px-1.5 py-0.5 rounded-full ${selectedCategory === group
@@ -364,7 +503,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                       {/* Category Badge */}
                       <div className="flex items-center gap-4 bg-[#F8F8F8] border border-[#E5E5E5] px-6 py-4">
                         <div className="w-12 h-12 rounded-full bg-[#03C1CA]/10 flex items-center justify-center">
-                          {getCategoryIcon(group)}
+                          {getCategoryIconForGroup(group)}
                         </div>
                         <div>
                           <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#222222]">
@@ -409,17 +548,45 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
         <div className="fixed bottom-8 right-8 z-40 hidden lg:block">
           <div className="bg-white shadow-lg border border-[#E5E5E5] p-4 max-w-[200px]">
             <p className="text-xs font-semibold text-[#999999] uppercase tracking-wider mb-3">Quick Jump</p>
-            <div className="flex flex-col gap-2">
-              {uniqueGroups.map(group => (
-                <button
-                  key={group}
-                  onClick={() => scrollToSection(group)}
-                  className="text-left text-sm text-[#565454] hover:text-[#03C1CA] transition-colors truncate"
-                >
-                  → {group}
-                </button>
-              ))}
+            <div
+              className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+              style={{
+                maxHeight: hasMoreCategories
+                  ? (quickJumpExpanded ? '70vh' : '220px')
+                  : 'none',
+              }}
+            >
+              <div className="flex flex-col gap-2">
+                {uniqueGroups.map(group => (
+                  <button
+                    key={group}
+                    onClick={() => scrollToSection(group)}
+                    className="text-left text-sm text-[#565454] hover:text-[#03C1CA] transition-colors truncate"
+                  >
+                    → {group}
+                  </button>
+                ))}
+              </div>
             </div>
+            {hasMoreCategories && (
+              <button
+                type="button"
+                onClick={() => setQuickJumpExpanded(!quickJumpExpanded)}
+                className="flex items-center justify-center gap-1 text-xs font-medium text-[#03C1CA] hover:text-[#029AA2] transition-colors pt-1 border-t border-[#E5E5E5] mt-1 w-full"
+              >
+                {quickJumpExpanded ? (
+                  <>
+                    <ChevronUp className="w-3.5 h-3.5 shrink-0" />
+                    Show less
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-3.5 h-3.5 shrink-0" />
+                    Show more ({uniqueGroups.length - QUICK_JUMP_VISIBLE} more)
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       )}

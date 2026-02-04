@@ -39,6 +39,12 @@ export default defineConfig({
     }),
     assist({
       translate: {
+        // Document-level: "Translate document" creates a new document in another language
+        document: {
+          languageField: "language",
+          documentTypes: [...TRANSLATABLE_SCHEMA_TYPES],
+        },
+        // Field-level: translate individual fields (e.g. when editing)
         field: {
           documentTypes: [...TRANSLATABLE_SCHEMA_TYPES],
           languages: getLanguagesForAIAssist(),

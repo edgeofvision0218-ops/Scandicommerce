@@ -52,23 +52,26 @@ npm install @sanity/assist
 
 ### Configuration
 
-In `sanity.config.ts`, uncomment the AI Assist plugin:
+In `sanity.config.ts`, the AI Assist plugin is configured with both document-level and field-level translation:
 
 ```typescript
 import { assist } from "@sanity/assist";
+import { getLanguagesForAIAssist } from "@/sanity/lib/languages";
+import { TRANSLATABLE_SCHEMA_TYPES } from "@/sanity/lib/languages";
 
-export default defineConfig({
-  // ...
-  plugins: [
-    // ... other plugins
-    assist({
-      translate: {
-        field: {
-          languages: getLanguagesForAIAssist(),
-        },
-      },
-    }),
-  ],
+assist({
+  translate: {
+    // Document-level: "Translate document" creates a new document in another language
+    document: {
+      languageField: "language",
+      documentTypes: [...TRANSLATABLE_SCHEMA_TYPES],
+    },
+    // Field-level: translate individual fields when editing
+    field: {
+      documentTypes: [...TRANSLATABLE_SCHEMA_TYPES],
+      languages: getLanguagesForAIAssist(),
+    },
+  },
 });
 ```
 
@@ -76,13 +79,19 @@ export default defineConfig({
 
 Once configured, you can:
 
-1. **Translate fields directly in Studio:**
+1. **Translate an entire document (recommended for new language versions):**
+   - Open a document (e.g. a page in English) in Sanity Studio
+   - Open the AI Assist panel (or use the document actions menu)
+   - Use **"Translate document"** and choose the target language (e.g. Norwegian, German)
+   - AI Assist will create a new document with the same structure and all string/Portable Text fields translated. Set the new document’s `language` field to the target language and link it via Document Internationalization if you use that plugin.
+
+2. **Translate fields directly in Studio:**
    - Open any document in Sanity Studio
    - Click on a text field
    - Use the AI Assist "Translate" action to translate the field content
    - Select source and target languages from the dropdown
 
-2. **Translate entire documents programmatically:**
+3. **Translate entire documents programmatically:**
 
 ```typescript
 import { client } from "@/sanity/lib/client";

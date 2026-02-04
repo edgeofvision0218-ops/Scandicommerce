@@ -11,6 +11,8 @@ export interface Partner {
   id: number
   name: string
   category: string
+  /** Multiple tags (e.g. ERP, OMS, Shipping); first is used as primary for section grouping */
+  categories?: string[]
   description: string
   benefits: string[]
   image: string
@@ -82,14 +84,14 @@ export default function PartnerCard({
     <div className="bg-white flex flex-col">
       {/* Partner Image - aspect shrinks (4/3 → 5/3) when expanded for more content focus */}
       <div
-        className={`relative w-full min-h-[200px] sm:min-h-[240px] aspect-[4/3]`}
+        className={`relative w-full min-h-[200px] sm:min-h-[240px] aspect-[17/8.95]`}
         style={{ transition: 'aspect-ratio 300ms ease-in-out' }}
       >
         <Image
           src={partner.image}
           alt={partner.name}
           fill
-          className="object-cover object-center transition-opacity duration-300"
+          className="object-contain object-bottom transition-opacity duration-300"
           sizes={imageSizes}
         />
 
@@ -113,17 +115,23 @@ export default function PartnerCard({
 
       <div className="relative flex-grow flex flex-col min-h-[281px] overflow-visible">
         <div
-          className={`p-6 flex flex-col border border-[#565454] bg-white border-t-0 transition-[box-shadow] duration-[800ms] ease-in-out ${
-            isPanelFloating ? 'absolute top-0 left-0 w-full z-10 shadow-xl' : ''
-          }`}
+          className={`p-6 flex flex-col border border-[#565454] bg-white border-t-0 transition-[box-shadow] duration-[800ms] ease-in-out ${isPanelFloating ? 'absolute top-0 left-0 w-full z-10 shadow-xl' : ''
+            }`}
         >
           <div className="flex items-center justify-between gap-3 mb-4 flex-wrap w-full">
             <h3 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-[#03C1CA]">
               {partner.name}
             </h3>
-            <span className="px-5 py-1 bg-[#1F1D1D33] text-[#565454] text-xs sm:text-sm shrink-0">
-              {partner.category}
-            </span>
+            <div className="flex flex-wrap gap-1.5 shrink-0 justify-end">
+              {(partner.categories?.length ? partner.categories : [partner.category]).filter(Boolean).map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1 bg-[#1F1D1D33] text-[#565454] text-xs sm:text-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
 
           {/* Hidden clone to measure expanded height on mount so first open animates */}
