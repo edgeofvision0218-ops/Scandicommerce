@@ -133,7 +133,7 @@ function AddOnCard({ addOn, index }: { addOn: AddOn; index: number }) {
       </button>
       
       {/* Title */}
-      <h3 className="text-lg font-semibold text-gray-900 mb-2 pr-20">
+      <h3 className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] font-semibold text-gray-900 mb-2 pr-20">
         {addOn.title}
       </h3>
       
@@ -141,7 +141,7 @@ function AddOnCard({ addOn, index }: { addOn: AddOn; index: number }) {
       <p className="text-sm text-gray-500 mb-4">{addOn.description}</p>
       
       {/* Price */}
-      <p className="text-lg font-bold text-[#03C1CA] font-mono tracking-tight">
+      <p className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] font-bold text-[#03C1CA] font-mono tracking-tight">
         {addOn.price}
       </p>
     </div>
@@ -169,12 +169,12 @@ export default function FrequentlyAddedTogether({ addOns }: FrequentlyAddedToget
 
   return (
     <section className="bg-[#F8F8F8] py-16 lg:py-24">
-      <div className="container mx-auto page-padding-x">
+      <div className="section_container mx-auto page-padding-x">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 text-center mb-3">
+          <h2 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-gray-900 text-center mb-3">
             {sectionTitle}
           </h2>
-          <p className="text-base text-gray-500 text-center mb-10">
+          <p className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] text-gray-500 text-center mb-10">
             {sectionSubtitle}
           </p>
 

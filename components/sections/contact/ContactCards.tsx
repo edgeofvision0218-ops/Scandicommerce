@@ -78,9 +78,9 @@ function ContactCard({ icon, title, subtitle, detail, href, showLeftBorder, show
           {icon}
         </div>
       </div>
-      <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-xs md:text-sm text-gray-500 mb-1">{subtitle}</p>
-      <p className="text-xs md:text-sm text-[#03C1CA] font-medium">{detail}</p>
+      <h3 className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] font-bold text-gray-900 mb-2">{title}</h3>
+      <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] text-gray-500 mb-1">{subtitle}</p>
+      <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] text-[#03C1CA] font-medium">{detail}</p>
     </div>
   )
 
@@ -102,7 +102,7 @@ export default function ContactCards({ contactCards }: ContactCardsProps) {
 
   return (
     <section className="py-8 md:py-12 lg:py-16 bg-white">
-      <div className="container mx-auto page-padding-x">
+      <div className="section_container mx-auto page-padding-x">
         <div className="flex flex-col md:flex-row items-stretch justify-center">
           {cards.map((card, index) => (
             <ContactCard

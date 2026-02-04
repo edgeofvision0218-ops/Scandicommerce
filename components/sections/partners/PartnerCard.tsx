@@ -118,7 +118,7 @@ export default function PartnerCard({
           }`}
         >
           <div className="flex items-center justify-between gap-3 mb-4 flex-wrap w-full">
-            <h3 className="text-xl lg:text-2xl font-bold text-[#03C1CA]">
+            <h3 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-[#03C1CA]">
               {partner.name}
             </h3>
             <span className="px-5 py-1 bg-[#1F1D1D33] text-[#565454] text-xs sm:text-sm shrink-0">

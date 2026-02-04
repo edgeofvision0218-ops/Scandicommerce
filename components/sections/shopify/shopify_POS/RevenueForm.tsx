@@ -38,16 +38,16 @@ export default function RevenueForm({ revenueForm }: RevenueFormProps) {
       <div className="bg-[#00BFC8]">
         {/* Top section with title and testimonial */}
         <div className="pt-16 pb-8 lg:pt-20 lg:pb-12">
-          <div className="container mx-auto page-padding-x">
+          <div className="section_container mx-auto page-padding-x">
             {/* Title */}
             <div className="text-center mb-10">
               {title && (
-                <h2 className="text-3xl lg:text-4xl xl:text-[42px] font-bold text-white mb-4">
+                <h2 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-white mb-4">
                   {title}
                 </h2>
               )}
               {subtitle && (
-                <p className="text-white/90 max-w-2xl mx-auto leading-relaxed" style={{ fontSize: '0.99rem' }}>
+                <p className="text-white/90 max-w-2xl mx-auto leading-relaxed text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[14px] xl:text-[16px]" >
                   {subtitle}
                 </p>
               )}
@@ -99,12 +99,12 @@ export default function RevenueForm({ revenueForm }: RevenueFormProps) {
 
         {/* Form section - white card */}
         <div className="pb-[4.5rem]">
-          <div className="container mx-auto page-padding-x">
+          <div className="section_container mx-auto page-padding-x">
             <div className="w-full max-w-5xl lg:w-[75%] mx-auto bg-white shadow-2xl px-8 py-10 lg:px-16 lg:py-16">
               {/* Form header */}
               <div className="text-center mb-10">
                 {form?.formTitle && (
-                  <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-gray-900 mb-3">
                     {form.formTitle}
                   </h3>
                 )}
@@ -114,7 +114,7 @@ export default function RevenueForm({ revenueForm }: RevenueFormProps) {
                   </p>
                 )}
                 {form?.formDescription && (
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-600 text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[14px] xl:text-[16px]">
                     {form.formDescription}
                   </p>
                 )}

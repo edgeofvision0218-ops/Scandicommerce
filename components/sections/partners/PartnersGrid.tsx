@@ -224,10 +224,10 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
 
   return (
     <section className="bg-white py-16 lg:py-24">
-      <div className="container mx-auto page-padding-x mb-12">
+      <div className="section_container mx-auto page-padding-x mb-12">
         {/* Search & Filter Header */}
         <div className="max-w-4xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#222222] text-center mb-8">
+          <h2 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-[#222222] text-center mb-8">
             Find Your Integration Partner
           </h2>
           
@@ -330,7 +330,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
 
       {/* Partners Grid by Category */}
       {filteredPartners.length === 0 ? (
-        <div className="container mx-auto page-padding-x">
+        <div className="section_container mx-auto page-padding-x">
           <div className="text-center py-16 bg-[#F8F8F8]">
             <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#E5E5E5] flex items-center justify-center">
               <Search className="w-8 h-8 text-[#999999]" />

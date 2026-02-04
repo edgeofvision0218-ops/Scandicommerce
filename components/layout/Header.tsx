@@ -149,7 +149,7 @@ export default function Header({ settings }: HeaderProps) {
           : 'bg-white shadow-header'
           }`}
       >
-        <nav className="container py-2 sm:py-0 mx-auto page-padding-x overflow-visible">
+        <nav className="section_container py-2 sm:py-0 mx-auto page-padding-x overflow-visible">
           <div className="flex items-center justify-between h-12 narrow:h-14 sm:h-16 lg:h-20 gap-4 narrow:gap-2 min-h-0">
             <div className="flex items-center gap-1 narrow:gap-2 min-w-0 flex-1 lg:flex-initial">
               <button

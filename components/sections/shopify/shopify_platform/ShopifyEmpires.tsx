@@ -49,11 +49,11 @@ export default function ShopifyEmpires({ shopifyEmpires }: ShopifyEmpiresProps) 
   return (
     <section className="relative bg-white overflow-hidden">
       {/* Main content */}
-      <div className="container mx-auto page-padding-x py-16 lg:py-24">
+      <div className="section_container mx-auto page-padding-x py-16 lg:py-24">
         {/* Title */}
         {title && (
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-bold text-gray-900 leading-tight">
+            <h2 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-gray-900 leading-tight">
               {title}
             </h2>
           </div>
@@ -74,14 +74,14 @@ export default function ShopifyEmpires({ shopifyEmpires }: ShopifyEmpiresProps) 
 
                 {/* Title */}
                 {feature.title && (
-                  <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] font-bold text-gray-900 mb-3">
                     {feature.title}
                   </h3>
                 )}
 
                 {/* Description */}
                 {feature.description && (
-                  <p className="text-gray-500 text-sm leading-relaxed mb-4 max-w-xs">
+                  <p className="text-gray-500 text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] leading-relaxed mb-4 max-w-xs">
                     {feature.description}
                   </p>
                 )}

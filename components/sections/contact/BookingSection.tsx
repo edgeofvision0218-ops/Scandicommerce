@@ -557,7 +557,7 @@ export default function BookingSection({ bookingSection, messageSection, benefit
 
   return (
     <section className="py-12 lg:py-16 bg-white">
-      <div className="container mx-auto page-padding-x">
+      <div className="section_container mx-auto page-padding-x">
         <div className={`grid grid-cols-1 gap-8 lg:gap-12 ${bookingEnabled ? 'lg:grid-cols-2' : 'max-w-2xl mx-auto'}`}>
           {bookingEnabled && (
             <div
@@ -570,10 +570,10 @@ export default function BookingSection({ bookingSection, messageSection, benefit
                 <span className="inline-block text-xs font-semibold text-white bg-[#03C1CA] px-3 py-1 mb-4">
                   {bookingLabel}
                 </span>
-                <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] font-bold text-gray-900 mb-2">
                   {bookingTitle}
                 </h2>
-                <p className="text-sm text-gray-500 mb-6">
+                <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] text-gray-500 mb-6">
                   {bookingDescription}
                 </p>
 
@@ -671,10 +671,10 @@ export default function BookingSection({ bookingSection, messageSection, benefit
                 <span className="inline-block text-xs font-semibold text-white bg-[#03C1CA] px-3 py-1  mb-4">
                   {messageLabel}
                 </span>
-                <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] font-bold text-gray-900 mb-2">
                   {messageTitle}
                 </h2>
-                <p className="text-sm text-gray-500 mb-6">
+                <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] text-gray-500 mb-6">
                   {messageDescription}
                 </p>
                 <ContactForm submitButtonText={submitButtonText} />

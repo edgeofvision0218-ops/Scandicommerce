@@ -70,10 +70,10 @@ export default function MeetTheTeam({ meetTheTeam }: MeetTheTeamProps) {
       <div className="w-full">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-white mb-6">
             {title}
           </h2>
-          <p className="text-lg lg:text-2xl text-white">
+          <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] text-white">
             {subtitle}
           </p>
         </div>
@@ -99,16 +99,16 @@ export default function MeetTheTeam({ meetTheTeam }: MeetTheTeamProps) {
 
               {/* Overlay with Info */}
               <div className="absolute bottom-0 left-0 right-0 bg-[#11111180] backdrop-blur-[10px] p-4 lg:p-6 flex flex-col items-center justify-between">
-                <h3 className="text-xl lg:text-2xl font-bold text-white mb-2">
+                <h3 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-white mb-2">
                   {member.name}
                 </h3>
-                <p className="text-[10px] lg:text-[11px] xl:text-sm text-white mb-2">
+                <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] text-white mb-2">
                   {member.role}
                 </p>
-                <p className="text-[10px] lg:text-[11px] xl:text-sm text-white/90 mb-2">
+                <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] text-white/90 mb-2">
                   Specialties: {member.specialties}
                 </p>
-                <p className="text-[10px] lg:text-[11px] xl:text-sm text-white/80">
+                <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] text-white/80">
                   {member.funFact}
                 </p>
               </div>

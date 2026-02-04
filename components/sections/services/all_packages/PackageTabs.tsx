@@ -21,7 +21,7 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
 
   return (
     <section className="bg-white py-12 lg:py-16">
-      <div className="container mx-auto page-padding-x">
+      <div className="section_container mx-auto page-padding-x">
         <div className="max-w-6xl mx-auto">
           {/* Tab Navigation */}
           <div className="border-b border-gray-200 mb-8 overflow-x-auto">
@@ -56,7 +56,7 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                   // Categorized view
                   pkg.includedCategories.map((category, categoryIndex) => (
                     <div key={categoryIndex}>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                      <h3 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-gray-900 mb-6">
                         {category.category}
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -65,7 +65,7 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                             key={itemIndex}
                             className="bg-white p-5 border border-gray-100 shadow-sm"
                           >
-                            <span className="text-gray-700 text-base">{item}</span>
+                            <span className="text-gray-700 text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px]">{item}</span>
                           </div>
                         ))}
                       </div>
@@ -83,7 +83,7 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                           key={index}
                           className="bg-white p-5 border border-gray-100 shadow-sm"
                         >
-                          <span className="text-gray-700 text-base">{item}</span>
+                          <span className="text-gray-700 text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px]">{item}</span>
                         </div>
                       ))}
                     </div>
@@ -149,10 +149,10 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                         key={index}
                         className="bg-white p-6 rounded-lg shadow-sm border border-gray-100"
                       >
-                        <h4 className="text-lg font-bold text-gray-900 mb-3">
+                        <h4 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-gray-900 mb-3">
                           {item.question}
                         </h4>
-                        <p className="text-gray-600 text-base leading-relaxed">
+                        <p className="text-gray-600 text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] leading-relaxed">
                           {item.answer}
                         </p>
                       </div>
@@ -190,7 +190,7 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                           ))}
                         </div>
                         {/* Review Text */}
-                        <p className="text-gray-900 text-lg mb-4 leading-relaxed">
+                        <p className="text-gray-900 text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] mb-4 leading-relaxed">
                           &quot;{review.comment}&quot;
                         </p>
                         {/* Reviewer Name */}
@@ -199,7 +199,7 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                         </p>
                         {/* Reviewer Title/Company */}
                         {review.title && (
-                          <p className="text-gray-500 text-base">
+                          <p className="text-gray-500 text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px]">
                             {review.title}
                           </p>
                         )}

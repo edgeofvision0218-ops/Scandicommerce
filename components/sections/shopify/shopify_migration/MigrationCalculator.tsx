@@ -103,7 +103,7 @@ export default function MigrationCalculator() {
 
   return (
     <section className="relative overflow-hidden bg-[#00BFC8] py-16 lg:py-24">
-      <div className="container mx-auto page-padding-x">
+      <div className="section_container mx-auto page-padding-x">
         <div className="w-full max-w-2xl mx-auto">
           {/* Badge */}
           <div className="flex justify-center mb-6">
@@ -113,10 +113,10 @@ export default function MigrationCalculator() {
           </div>
 
           {/* Title */}
-          <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white text-center mb-4">
+          <h2 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-white text-center mb-4">
             Get Your Migration Quote
           </h2>
-          <p className="text-white/90 text-center text-base lg:text-lg mb-10">
+          <p className="text-white/90 text-center text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[16px] xl:text-[18px] mb-10">
             Calculate your exact migration cost instantly
           </p>
 
@@ -288,7 +288,7 @@ export default function MigrationCalculator() {
 
             {/* Pricing Section */}
             <div className="mt-10 pt-8 border-t border-[#E5E5E5]">
-              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">
+              <h3 className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] text-[#565454] font-bold text-gray-900 mb-6">
                 Migration Pricing
               </h3>
 
@@ -314,7 +314,7 @@ export default function MigrationCalculator() {
                       <span className="block text-sm text-gray-500 mb-1">
                         Total Cost
                       </span>
-                      <span className="text-3xl lg:text-4xl font-bold text-[#03C1CA] font-mono">
+                      <span className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-[#03C1CA] font-mono">
                         ${Math.round(pricingData.price).toLocaleString()}
                       </span>
                     </div>
@@ -322,7 +322,7 @@ export default function MigrationCalculator() {
                       <span className="block text-sm text-gray-500 mb-1">
                         Estimated Time
                       </span>
-                      <span className="text-xl lg:text-2xl font-bold text-gray-900 font-mono">
+                      <span className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-gray-900 font-mono">
                         {pricingData.time} days
                       </span>
                     </div>

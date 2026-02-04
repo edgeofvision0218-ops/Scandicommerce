@@ -120,7 +120,7 @@ export default function TrustedBy({ trustedBy }: TrustedByProps) {
 
   return (
     <section className="bg-teal py-12 lg:py-16 overflow-hidden" ref={ref}>
-      <div className="container mx-auto page-padding-x">
+      <div className="section_container mx-auto page-padding-x">
         <motion.div
           className="text-center mb-8 lg:mb-12"
           variants={titleVariants}
