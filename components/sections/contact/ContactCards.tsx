@@ -58,13 +58,13 @@ const defaultCards: CardData[] = [
 const getIcon = (iconName?: string) => {
   switch (iconName) {
     case 'email':
-      return <HiOutlineMail size={28} />
+      return <HiOutlineMail className='w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7' />
     case 'phone':
-      return <FiPhone size={28} />
+      return <FiPhone className='w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7' />
     case 'location':
-      return <HiOutlineLocationMarker size={28} />
+      return <HiOutlineLocationMarker className='w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7' />
     default:
-      return <HiOutlineMail size={28} />
+      return <HiOutlineMail className='w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7' />
   }
 }
 
@@ -73,7 +73,7 @@ function ContactCard({ icon, title, subtitle, detail, href, showLeftBorder, show
 
   const content = (
     <div className={`flex flex-col items-center text-center py-6 px-8 bg-white ${borderClasses}`}>
-      <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#03C1CA] flex items-center justify-center mb-4">
+      <div className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-[#03C1CA] flex items-center justify-center mb-4">
         <div className="text-white text-xl md:text-2xl">
           {icon}
         </div>

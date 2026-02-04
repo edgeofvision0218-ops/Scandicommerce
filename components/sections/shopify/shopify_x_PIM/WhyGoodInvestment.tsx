@@ -45,7 +45,7 @@ export default function WhyGoodInvestment({ whyGoodInvestment }: WhyGoodInvestme
             {benefits.map((benefit, index) => (
               <div key={index} className="flex items-start gap-4 py-5">
                 {/* Number Circle */}
-                <div className="flex-shrink-0 w-10 h-10 bg-[#03C1CA] rounded-full flex items-center justify-center">
+                <div className="flex-shrink-0 w-7 h-7 sm:w-10 sm:h-10 bg-[#03C1CA] rounded-full flex items-center justify-center">
                   <span className="text-white font-bold text-base">{index + 1}</span>
                 </div>
                 

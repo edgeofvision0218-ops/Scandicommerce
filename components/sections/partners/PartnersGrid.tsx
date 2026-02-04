@@ -137,14 +137,14 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
 
   const partners: Partner[] = partnersGrid?.partners && partnersGrid.partners.length > 0
     ? partnersGrid.partners.map((p, index) => ({
-        id: index + 1,
-        name: p.name || '',
-        category: p.category || '',
-        description: p.description || '',
-        benefits: p.benefits || [],
-        image: p.imageUrl || '',
-        logo: p.logoUrl,
-      }))
+      id: index + 1,
+      name: p.name || '',
+      category: p.category || '',
+      description: p.description || '',
+      benefits: p.benefits || [],
+      image: p.imageUrl || '',
+      logo: p.logoUrl,
+    }))
     : defaultPartners
 
   // Extract unique categories
@@ -170,13 +170,13 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
   // Filter partners based on search and category
   const filteredPartners = useMemo(() => {
     return partners.filter(partner => {
-      const matchesSearch = searchQuery === '' || 
+      const matchesSearch = searchQuery === '' ||
         partner.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         partner.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         partner.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         partner.benefits.some(b => b.toLowerCase().includes(searchQuery.toLowerCase()))
-      
-      const matchesCategory = selectedCategory === null || 
+
+      const matchesCategory = selectedCategory === null ||
         getCategoryGroup(partner.category) === selectedCategory
 
       return matchesSearch && matchesCategory
@@ -186,7 +186,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
   // Group filtered partners by category group
   const groupedPartners = useMemo(() => {
     const groups: Record<string, Partner[]> = {}
-    
+
     filteredPartners.forEach(partner => {
       const group = getCategoryGroup(partner.category)
       if (!groups[group]) {
@@ -194,7 +194,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
       }
       groups[group].push(partner)
     })
-    
+
     return groups
   }, [filteredPartners])
 
@@ -230,7 +230,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
           <h2 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-[#222222] text-center mb-8">
             Find Your Integration Partner
           </h2>
-          
+
           {/* Search Bar */}
           <div className="relative mb-8">
             <div className="relative">
@@ -259,15 +259,14 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
               <ChevronDown className="w-4 h-4" />
               <span>Jump to category or filter:</span>
             </div>
-            
+
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setSelectedCategory(null)}
-                className={`px-5 py-2.5 text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
-                  selectedCategory === null
-                    ? 'bg-[#03C1CA] text-white'
-                    : 'bg-[#F5F5F5] text-[#565454] hover:bg-[#E8E8E8] hover:text-[#222222]'
-                }`}
+                className={`px-5 py-2.5 text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${selectedCategory === null
+                  ? 'bg-[#03C1CA] text-white'
+                  : 'bg-[#F5F5F5] text-[#565454] hover:bg-[#E8E8E8] hover:text-[#222222]'
+                  }`}
               >
                 <span className="w-4 h-4 rounded-full border-2 border-current flex items-center justify-center text-xs">
                   {partners.length}
@@ -282,21 +281,19 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                     onClick={() => setSelectedCategory(selectedCategory === group ? null : group)}
                     onDoubleClick={() => scrollToSection(group)}
                     title="Click to filter, double-click to jump"
-                    className={`px-5 py-2.5 text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
-                      selectedCategory === group
-                        ? 'bg-[#03C1CA] text-white'
-                        : 'bg-[#F5F5F5] text-[#565454] hover:bg-[#E8E8E8] hover:text-[#222222]'
-                    }`}
+                    className={`px-5 py-2.5 text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${selectedCategory === group
+                      ? 'bg-[#03C1CA] text-white'
+                      : 'bg-[#F5F5F5] text-[#565454] hover:bg-[#E8E8E8] hover:text-[#222222]'
+                      }`}
                   >
                     <span className={`${selectedCategory === group ? 'text-white' : 'text-[#03C1CA]'}`}>
                       {getCategoryIcon(group, 'sm')}
                     </span>
                     {group}
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                      selectedCategory === group 
-                        ? 'bg-white/20 text-white' 
-                        : 'bg-[#03C1CA]/10 text-[#03C1CA]'
-                    }`}>
+                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${selectedCategory === group
+                      ? 'bg-white/20 text-white'
+                      : 'bg-[#03C1CA]/10 text-[#03C1CA]'
+                      }`}>
                       {groupCount}
                     </span>
                   </button>
@@ -363,7 +360,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                     <div className="flex items-center gap-4">
                       {/* Left Line */}
                       <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E5E5E5] to-[#03C1CA]"></div>
-                      
+
                       {/* Category Badge */}
                       <div className="flex items-center gap-4 bg-[#F8F8F8] border border-[#E5E5E5] px-6 py-4">
                         <div className="w-12 h-12 rounded-full bg-[#03C1CA]/10 flex items-center justify-center">
@@ -378,7 +375,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                           </p>
                         </div>
                       </div>
-                      
+
                       {/* Right Line */}
                       <div className="flex-1 h-px bg-gradient-to-l from-transparent via-[#E5E5E5] to-[#03C1CA]"></div>
                     </div>
@@ -386,7 +383,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                 </div>
 
                 {/* Partner Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <div className="px-2 xs:px-4 md:px-6 gap-1 xs:gap-2 md:gap-4 xl:gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                   {groupPartners.map((partner, index) => (
                     <div
                       key={partner.id}

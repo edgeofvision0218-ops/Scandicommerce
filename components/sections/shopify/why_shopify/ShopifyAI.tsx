@@ -42,8 +42,8 @@ export default function ShopifyAI({ shopifyAi }: ShopifyAIProps) {
                   key={index}
                   className="bg-[#F8F8F8] rounded-lg p-6 lg:p-8 flex items-start gap-6"
                 >
-                  <div className="flex-shrink-0 w-16 h-16 bg-[#03C1CA] rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-2xl lg:text-3xl">
+                  <div className="flex-shrink-0 w-9 h-9 xs:w-12 xs:h-12 sm:w-16 sm:h-16 bg-[#03C1CA] rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-lg xs:text-xl sm:text-2xl lg:text-3xl">
                       {index + 1}
                     </span>
                   </div>

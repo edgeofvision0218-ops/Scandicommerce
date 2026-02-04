@@ -36,7 +36,7 @@ export default function AIEnhancedProcess({ aiEnhancedProcess }: AIEnhancedProce
             {processSteps.map((step, index) => (
               <div key={index} className="flex items-start gap-6">
                 {/* Step Number */}
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#03C1CA] flex items-center justify-center">
+                <div className="flex-shrink-0 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#03C1CA] flex items-center justify-center">
                   <span className="text-white font-bold text-lg">{index + 1}</span>
                 </div>
 

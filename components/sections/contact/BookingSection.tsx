@@ -566,7 +566,7 @@ export default function BookingSection({ bookingSection, messageSection, benefit
                 boxShadow: '0px 15px 22px 0px rgba(84, 114, 115, 0.12), 10px 45px 35px 0px rgba(0, 0, 0, 0.03)'
               }}
             >
-              <div className="p-[50px_29px_34px_29px]">
+              <div className="p-4 xs:p-6 sm:p-[50px_29px_34px_29px]">
                 <span className="inline-block text-xs font-semibold text-white bg-[#03C1CA] px-3 py-1 mb-4">
                   {bookingLabel}
                 </span>
@@ -667,7 +667,7 @@ export default function BookingSection({ bookingSection, messageSection, benefit
 
           <div className="flex flex-col justify-between">
             <div className="bg-[#F5F5F5B2] shadow-lg border border-[#5654544D] overflow-hidden">
-              <div className="p-[50px_29px_34px_29px]">
+              <div className="p-4 xs:p-6 sm:p-[50px_29px_34px_29px]">
                 <span className="inline-block text-xs font-semibold text-white bg-[#03C1CA] px-3 py-1  mb-4">
                   {messageLabel}
                 </span>

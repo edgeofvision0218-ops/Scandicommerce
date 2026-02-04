@@ -31,8 +31,8 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-auto min-w-[120px] sm:min-w-[150px] shrink-0 p-2 sm:p-4 text-sm sm:text-base font-medium transition-colors duration-200 border-l border-gray-200 first:border-l-0 whitespace-nowrap ${activeTab === tab.id
-                      ? 'bg-[#03C1CA] text-white'
-                      : 'bg-white text-gray-900 hover:bg-gray-50'
+                    ? 'bg-[#03C1CA] text-white'
+                    : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                 >
                   {tab.label}
@@ -43,9 +43,9 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
 
           {/* Tab Content */}
           <div
-            className={`p-8 lg:p-12 min-h-[400px] ${activeTab === 'reviews'
-                ? 'bg-gradient-to-b from-[#F0F9FA] to-[#E0F4F6]'
-                : 'bg-[#F0F9FA]'
+            className={`p-4 sm:p-8 lg:p-12 min-h-[400px] ${activeTab === 'reviews'
+              ? 'bg-gradient-to-b from-[#F0F9FA] to-[#E0F4F6]'
+              : 'bg-[#F0F9FA]'
               }`}
           >
             {activeTab === 'overview' && <IdealFor idealFor={pkg.idealFor} />}
@@ -99,7 +99,7 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                     {pkg.processSteps.map((step, index) => (
                       <div
                         key={index}
-                        className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex items-start gap-6"
+                        className="bg-white p-3 sm:p-6 rounded-lg shadow-sm border border-gray-100 flex sm:flex-row flex-col items-start gap-6"
                       >
                         {/* Week label on the left */}
                         <div className="flex-shrink-0">
@@ -109,10 +109,10 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                         </div>
                         {/* Title and description */}
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold text-gray-900 mb-1">
+                          <h3 className="text-[5.3vw] xs:text-[3.5vw] sm:text-[3.2vw] md:text-[3.2vw] lg:text-[28px] xl:text-[34px] font-bold text-gray-900 mb-1">
                             {step.title}
                           </h3>
-                          <p className="text-base text-gray-600">
+                          <p className="text-[4vw] xs:text-[2.6vw] sm:text-[2.3vw] md:text-[1.8vw] lg:text-[14px] xl:text-[16px] text-gray-600">
                             {step.description}
                           </p>
                         </div>
@@ -179,8 +179,8 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
                             <svg
                               key={star}
                               className={`w-6 h-6 ${star <= review.rating
-                                  ? 'text-amber-400'
-                                  : 'text-gray-300'
+                                ? 'text-amber-400'
+                                : 'text-gray-300'
                                 }`}
                               fill="currentColor"
                               viewBox="0 0 20 20"

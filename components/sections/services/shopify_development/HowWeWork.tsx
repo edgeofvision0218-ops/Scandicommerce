@@ -36,7 +36,7 @@ export default function HowWeWork({ howWeWork }: HowWeWorkProps) {
             {steps.map((step, index) => (
               <div key={index} className="text-center">
                 {/* Number Circle */}
-                <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-[#03C1CA] rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 lg:mb-6">
+                <div className="w-9 h-9 xs:w-12 xs:h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-[#03C1CA] rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 lg:mb-6">
                   <span className="text-white text-lg sm:text-xl lg:text-2xl font-bold">
                     {step.number}
                   </span>

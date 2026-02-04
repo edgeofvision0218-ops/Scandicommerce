@@ -63,7 +63,7 @@ function AddOnCard({ addOn, index }: { addOn: AddOn; index: number }) {
     setIsAdding(true)
     try {
       const result = await addToCart(variantId, 1, addOn.shopifyProduct.productTitle)
-      
+
       if (result.success) {
         setShowSuccess(true)
         setTimeout(() => setShowSuccess(false), 2000)
@@ -87,15 +87,14 @@ function AddOnCard({ addOn, index }: { addOn: AddOn; index: number }) {
       <button
         onClick={handleAddToCart}
         disabled={isDisabled}
-        className={`absolute top-5 right-5 text-white px-5 py-1.5 text-sm font-medium transition-all duration-200 flex items-center gap-2 rounded ${
-          isDisabled
-            ? 'bg-gray-300 cursor-not-allowed'
-            : showSuccess
+        className={`absolute top-5 right-5 text-white px-5 py-1.5 text-sm font-medium transition-all duration-200 hidden sm:flex items-center gap-2 rounded ${isDisabled
+          ? 'bg-gray-300 cursor-not-allowed'
+          : showSuccess
             ? 'bg-green-500 hover:bg-green-600'
             : hasShopifyProduct
-            ? 'bg-[#03C1CA] hover:bg-[#02a9b1] active:bg-[#028a91]'
-            : 'bg-gray-400 hover:bg-gray-500'
-        }`}
+              ? 'bg-[#03C1CA] hover:bg-[#02a9b1] active:bg-[#028a91]'
+              : 'bg-gray-400 hover:bg-gray-500'
+          }`}
         aria-label={`Add ${addOn.title} to cart`}
         title={!hasShopifyProduct ? `This add-on is not yet available for purchase` : `Add ${addOn.title} to cart`}
       >
@@ -131,19 +130,66 @@ function AddOnCard({ addOn, index }: { addOn: AddOn; index: number }) {
           </>
         )}
       </button>
-      
+
       {/* Title */}
       <h3 className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] font-semibold text-gray-900 mb-2 pr-20">
         {addOn.title}
       </h3>
-      
+
       {/* Description */}
       <p className="text-sm text-gray-500 mb-4">{addOn.description}</p>
-      
+
       {/* Price */}
-      <p className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] font-bold text-[#03C1CA] font-mono tracking-tight">
+      <p className="text-[4.3vw] xs:text-[2.6vw] sm:text-[2.5vw] md:text-[2.2vw] lg:text-[18px] xl:text-[24px] font-bold text-[#03C1CA] font-mono tracking-tight sm:pb-0 pb-4">
         {addOn.price}
       </p>
+
+      <button
+        onClick={handleAddToCart}
+        disabled={isDisabled}
+        className={`text-white px-5 py-1.5 text-xs sm:text-sm font-medium transition-all duration-200 sm:hidden flex items-center gap-2 rounded ${isDisabled
+          ? 'bg-gray-300 cursor-not-allowed'
+          : showSuccess
+            ? 'bg-green-500 hover:bg-green-600'
+            : hasShopifyProduct
+              ? 'bg-[#03C1CA] hover:bg-[#02a9b1] active:bg-[#028a91]'
+              : 'bg-gray-400 hover:bg-gray-500'
+          }`}
+        aria-label={`Add ${addOn.title} to cart`}
+        title={!hasShopifyProduct ? `This add-on is not yet available for purchase` : `Add ${addOn.title} to cart`}
+      >
+        {isAdding ? (
+          <>
+            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+            <span>Adding...</span>
+          </>
+        ) : showSuccess ? (
+          <>
+            <HiCheck className="w-4 h-4" />
+            <span>Added!</span>
+          </>
+        ) : (
+          <>
+            <HiShoppingBag className="w-4 h-4" />
+            <span>Add to Cart</span>
+          </>
+        )}
+      </button>
     </div>
   )
 }
