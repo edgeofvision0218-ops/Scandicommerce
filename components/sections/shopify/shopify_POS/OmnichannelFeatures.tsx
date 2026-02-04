@@ -49,7 +49,7 @@ export default function OmnichannelFeatures({ omnichannelFeatures }: Omnichannel
   return (
     <section className="relative bg-white overflow-hidden">
       {/* Main content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div className="container mx-auto page-padding-x py-16 lg:py-24">
         {/* Title */}
         {title && (
           <div className="text-center mb-12 lg:mb-16">

@@ -22,7 +22,7 @@ export default function CommonScenarios({ scenarios }: CommonScenariosProps) {
 
   return (
     <section className="bg-[#F8F8F8] py-12 sm:py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         {/* Header */}
         {title && (
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">

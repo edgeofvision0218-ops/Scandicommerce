@@ -22,7 +22,7 @@ export default function AIToolsToolkit({ aiToolsToolkit }: AIToolsToolkitProps) 
 
   return (
     <section className="bg-white py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
           {title && (

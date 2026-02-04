@@ -21,7 +21,7 @@ export default function ShopifyFacts({ shopifyFacts }: ShopifyFactsProps) {
 
   return (
     <section className="bg-[#F8F8F8] py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         {title && (
           <h2 className="text-[5.8vw] xs:text-[4.3vw] sm:text-[4.2vw] md:text-[4vw] lg:text-4xl xl:text-[42px] font-bold text-[#222222] text-center mb-12 lg:mb-16">
             {title}

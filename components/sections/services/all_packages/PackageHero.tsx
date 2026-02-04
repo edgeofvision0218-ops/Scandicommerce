@@ -80,7 +80,7 @@ export default function PackageHero({ pkg, shopifyProduct }: PackageHeroProps) {
       <div className="absolute top-[35%] left-[25%] lg:hidden w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-[#1DEFFA33]"></div>
       <div className="absolute bottom-[44%] right-[32%] lg:hidden w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full bg-[#1DEFFA33]"></div>
 
-      <div className="max-w-[90%] sm:container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[100%] xs:max-w-[90%] sm:container mx-auto page-padding-x relative z-10">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 lg:gap-16">
           {/* Left Section - Package Details */}
           <div className="flex flex-col w-full lg:w-1/2 py-4">
@@ -107,7 +107,7 @@ export default function PackageHero({ pkg, shopifyProduct }: PackageHeroProps) {
             </p>
 
             {/* Package Highlights - Mobile/Tablet only (below 1024px) */}
-            <div className="lg:hidden sm:mb-8 mb-4 flex flex-col justify-start items-start">
+            <div className="lg:hidden sm:mb-8 mb-4 flex flex-col justify-start items-start pl-[20px] xs:pl-[35px] lg:pl-0">
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold sm:mb-6 mb-3 text-black">
                   Package Highlights

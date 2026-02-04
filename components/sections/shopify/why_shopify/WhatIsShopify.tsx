@@ -17,7 +17,7 @@ export default function WhatIsShopify({ whatIsShopify }: WhatIsShopifyProps) {
 
   return (
     <section className="bg-white py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="max-w-5xl mx-auto text-center">
           {title && (
             <h2 className="text-[5.8vw] xs:text-[4.3vw] sm:text-[4.2vw] md:text-[4vw] lg:text-4xl xl:text-[42px] font-bold text-[#222222] mb-8 lg:mb-12">

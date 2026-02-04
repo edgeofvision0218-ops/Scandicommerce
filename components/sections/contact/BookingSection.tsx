@@ -557,7 +557,7 @@ export default function BookingSection({ bookingSection, messageSection, benefit
 
   return (
     <section className="py-12 lg:py-16 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className={`grid grid-cols-1 gap-8 lg:gap-12 ${bookingEnabled ? 'lg:grid-cols-2' : 'max-w-2xl mx-auto'}`}>
           {bookingEnabled && (
             <div

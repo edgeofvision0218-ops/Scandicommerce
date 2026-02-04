@@ -26,7 +26,7 @@ export default function OurStory({ ourStory }: OurStoryProps) {
 
   return (
     <section className="py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="bg-[#F5F5F5] grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Column - Text Content */}
           <div className="p-4 sm:p-8 lg:p-12">

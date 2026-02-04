@@ -22,7 +22,7 @@ export default function ReadyToBuild({ cta }: ReadyToBuildProps) {
 
   return (
     <section className="bg-[#03C1CA] py-12 sm:py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="rounded-lg py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-12">
           <div className="text-center max-w-2xl mx-auto">
             {/* Title */}

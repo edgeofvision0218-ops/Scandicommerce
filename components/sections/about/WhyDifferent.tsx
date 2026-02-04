@@ -74,7 +74,7 @@ export default function WhyDifferent({ whyDifferent }: WhyDifferentProps) {
 
   return (
     <section className="bg-white py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="text-center mb-12 lg:mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#222222] mb-4">
             {title}

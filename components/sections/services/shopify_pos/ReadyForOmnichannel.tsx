@@ -21,7 +21,7 @@ export default function ReadyForOmnichannel({ cta }: ReadyForOmnichannelProps) {
 
   return (
     <section className="bg-[#03C1CA] py-16 lg:py-[170px]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="text-center flex flex-col items-center justify-start lg:gap-[91px] gap-16">
           {(title || description) && (
             <div className="flex flex-col items-center justify-start lg:gap-7 gap-4">

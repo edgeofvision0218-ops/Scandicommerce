@@ -19,7 +19,7 @@ export default function RealMigrationResults({ results }: RealMigrationResultsPr
 
   return (
     <section className="bg-[#F8F8F8] py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         {title && (
           <div className="text-center mb-6 lg:mb-16">
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#222222] lg:mb-4 mb-2">

@@ -32,7 +32,7 @@ export default function SuccessStories({ successStories }: SuccessStoriesProps) 
 
       {/* Main content */}
       <div className="py-20 lg:py-28">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto page-padding-x">
           {/* Title */}
           <div className="text-center mb-12 lg:mb-16">
             {title && (

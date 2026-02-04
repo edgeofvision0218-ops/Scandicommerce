@@ -42,7 +42,7 @@ export default function BleedingMoney({ bleedingMoney }: BleedingMoneyProps) {
 
       {/* Main content */}
       <div className="relative z-10 py-12 lg:py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto page-padding-x">
           {/* Title */}
           {title && (
             <div className="text-center mb-16 lg:mb-20">

@@ -18,7 +18,7 @@ export default function CalculatorForm({ selectedPlatform }: CalculatorFormProps
 
   return (
     <section className="relative overflow-hidden bg-[#00BFC8] min-h-screen flex items-start justify-center py-12 lg:py-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="container mx-auto page-padding-x w-full">
         <div className="w-full max-w-xl mx-auto">
           {/* Title above the card */}
           <h2 className="text-2xl lg:text-3xl font-bold text-white mb-6">

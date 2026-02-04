@@ -43,7 +43,7 @@ export default function Features({ features }: FeaturesProps) {
 
   return (
     <section className="bg-white py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#222222] text-center mb-8 lg:mb-12">
             {title}

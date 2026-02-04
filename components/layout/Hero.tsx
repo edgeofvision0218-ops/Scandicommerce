@@ -83,7 +83,7 @@ export default function Hero({
 
   return (
     <section
-      className={`hero-section-responsive relative bg-[#F8F8F8] py-20 lg:py-24 overflow-hidden md:h-[calc(100vh-80px)] flex md:items-center items-start justify-center`}
+      className={`hero-section-responsive relative bg-[#F8F8F8] py-20 lg:py-24 overflow-hidden md:min-h-[760px] md:h-[calc(100vh-80px)] flex md:items-center items-start justify-center`}
     >
       <LiquidBlob
         page="homepage"
@@ -97,7 +97,7 @@ export default function Hero({
 
 
       <div
-        className={`static flex flex-col justify-center items-center mx-auto px-4 sm:px-6 lg:px-8 z-10 gap-6 xs:gap-8 sm:gap-[3vw] md:gap-[42px]`}
+        className={`static flex flex-col justify-center items-center mx-auto page-padding-x z-10 gap-6 xs:gap-8 sm:gap-[3vw] md:gap-[42px]`}
       >
         <div className={`sm:min-h-[53vw] md:min-h-[auto] max-w-5xl
           ${(titleText?.length || 0) < 30
@@ -106,7 +106,7 @@ export default function Hero({
               ? 'pt-[21vw] xs:pt-[17vw] gap-[14vw] hero-content-padding-top-2'
               : 'pt-[27vw] xs:pt-[20vw] gap-[18.5vw] hero-content-padding-top-3'
           }
-          sm:pt-5 px-0 xs:px-4 sm:px-6 lg:px-8 flex flex-col justify-start sm:justify-center items-center sm:gap-[25px] lg:gap-[35px] sm:w-3/4 xs:w-[80%] w-[94%]`}>
+          sm:pt-5 px-0 xs:page-padding-x flex flex-col justify-start sm:justify-center items-center sm:gap-[25px] lg:gap-[35px] sm:w-3/4 xs:w-[80%] w-[94%]`}>
           {titleText && (
             <h1 className="text-[6vw] xs:text-[4.5vw] sm:text-[4.2vw] md:text-[4vw] lg:text-4xl xl:text-[42px] font-bold text-center mb-1 sm:mb-3 lg:mb-6">
               {renderTitle()}

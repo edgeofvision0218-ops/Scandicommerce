@@ -103,7 +103,7 @@ export default function MigrationCalculator() {
 
   return (
     <section className="relative overflow-hidden bg-[#00BFC8] py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="w-full max-w-2xl mx-auto">
           {/* Badge */}
           <div className="flex justify-center mb-6">

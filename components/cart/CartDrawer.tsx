@@ -89,7 +89,7 @@ export default function CartDrawer() {
               </div>
               <button
                 onClick={closeCart}
-                className="p-2 hover:bg-[#F5F5F5] rounded-full transition-colors"
+                className="p-2 pr-0 hover:bg-[#F5F5F5] rounded-full transition-colors"
                 aria-label="Close cart"
               >
                 <HiXMark className="w-6 h-6 text-[#222222]" />

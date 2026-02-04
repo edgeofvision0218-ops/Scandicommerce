@@ -21,7 +21,7 @@ export default function MigrationProcess({ process }: MigrationProcessProps) {
 
   return (
     <section className="bg-white py-16 lg:py-[170px]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         {/* Heading */}
         {(title || subtitle) && (
           <div className="text-center mb-12 lg:mb-16">

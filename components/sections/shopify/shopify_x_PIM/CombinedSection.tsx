@@ -55,7 +55,7 @@ export default function CombinedSection({ combinedSection }: CombinedSectionProp
 
   return (
     <section className="bg-[#F8F8F8] py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         {/* Choosing the Right PIM Section */}
         {choosingPim && (
           <div className="mb-16 lg:mb-24">

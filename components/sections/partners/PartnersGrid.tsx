@@ -224,7 +224,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
 
   return (
     <section className="bg-white py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+      <div className="container mx-auto page-padding-x mb-12">
         {/* Search & Filter Header */}
         <div className="max-w-4xl mx-auto mb-12">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#222222] text-center mb-8">
@@ -330,7 +330,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
 
       {/* Partners Grid by Category */}
       {filteredPartners.length === 0 ? (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto page-padding-x">
           <div className="text-center py-16 bg-[#F8F8F8]">
             <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#E5E5E5] flex items-center justify-center">
               <Search className="w-8 h-8 text-[#999999]" />
@@ -358,7 +358,7 @@ export default function PartnersGrid({ partnersGrid }: PartnersGridProps) {
                 className={groupIndex > 0 ? 'mt-16' : ''}
               >
                 {/* Category Section Divider */}
-                <div className="relative mb-10 px-4 sm:px-6 lg:px-8">
+                <div className="relative mb-10 page-padding-x">
                   <div className="max-w-4xl mx-auto">
                     <div className="flex items-center gap-4">
                       {/* Left Line */}

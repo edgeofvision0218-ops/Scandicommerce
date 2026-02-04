@@ -59,7 +59,7 @@ export default function WhyShopifyWins({ whyShopify }: WhyShopifyWinsProps) {
 
   return (
     <section className="bg-white py-12 sm:py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         {/* Header */}
         {(title || subtitle) && (
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">

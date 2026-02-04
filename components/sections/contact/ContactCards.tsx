@@ -102,7 +102,7 @@ export default function ContactCards({ contactCards }: ContactCardsProps) {
 
   return (
     <section className="py-8 md:py-12 lg:py-16 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="flex flex-col md:flex-row items-stretch justify-center">
           {cards.map((card, index) => (
             <ContactCard

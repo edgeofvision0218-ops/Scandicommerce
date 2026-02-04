@@ -27,7 +27,7 @@ export default function RisksAndProtection({ risksProtection }: RisksAndProtecti
 
   return (
     <section className="bg-[#F8F8F8] py-16 lg:py-[170px]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left Column: Migration risks we eliminate */}
           <div>

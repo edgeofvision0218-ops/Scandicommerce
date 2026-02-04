@@ -70,7 +70,7 @@ export default function FAQ({ faq }: FAQProps) {
 
   return (
     <section className="py-12 md:py-16 lg:py-24 bg-[#03C1CA]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="text-center mb-8 md:mb-10">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2">
             {title}

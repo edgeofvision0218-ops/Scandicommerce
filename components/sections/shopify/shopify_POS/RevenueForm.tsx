@@ -38,7 +38,7 @@ export default function RevenueForm({ revenueForm }: RevenueFormProps) {
       <div className="bg-[#00BFC8]">
         {/* Top section with title and testimonial */}
         <div className="pt-16 pb-8 lg:pt-20 lg:pb-12">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="container mx-auto page-padding-x">
             {/* Title */}
             <div className="text-center mb-10">
               {title && (
@@ -99,7 +99,7 @@ export default function RevenueForm({ revenueForm }: RevenueFormProps) {
 
         {/* Form section - white card */}
         <div className="pb-[4.5rem]">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="container mx-auto page-padding-x">
             <div className="w-full max-w-5xl lg:w-[75%] mx-auto bg-white shadow-2xl px-8 py-10 lg:px-16 lg:py-16">
               {/* Form header */}
               <div className="text-center mb-10">

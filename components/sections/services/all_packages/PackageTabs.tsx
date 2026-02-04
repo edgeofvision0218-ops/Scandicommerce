@@ -21,7 +21,7 @@ export default function PackageTabs({ pkg }: PackageTabsProps) {
 
   return (
     <section className="bg-white py-12 lg:py-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="max-w-6xl mx-auto">
           {/* Tab Navigation */}
           <div className="border-b border-gray-200 mb-8 overflow-x-auto">

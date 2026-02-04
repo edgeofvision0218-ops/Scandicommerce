@@ -169,7 +169,7 @@ export default function FrequentlyAddedTogether({ addOns }: FrequentlyAddedToget
 
   return (
     <section className="bg-[#F8F8F8] py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto page-padding-x">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 text-center mb-3">
             {sectionTitle}
