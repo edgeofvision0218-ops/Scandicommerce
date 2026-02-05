@@ -37,6 +37,10 @@ export const deskStructure = (S: StructureBuilder) =>
                 .title("Blog Pages")
                 .schemaType("blogPage")
                 .child(S.documentTypeList("blogPage").title("Blog Pages")),
+              S.listItem()
+                .title("Blog Posts")
+                .schemaType("blogPost")
+                .child(S.documentTypeList("blogPost").title("Blog Posts")),
             ])
         ),
 
@@ -159,9 +163,21 @@ export const deskStructure = (S: StructureBuilder) =>
         .child(S.documentTypeList("workPage").title("Work Pages")),
 
       S.listItem()
-        .title("Blog Page")
-        .schemaType("blogPage")
-        .child(S.documentTypeList("blogPage").title("Blog Pages")),
+        .title("Blog")
+        .child(
+          S.list()
+            .title("Blog")
+            .items([
+              S.listItem()
+                .title("Blog Page")
+                .schemaType("blogPage")
+                .child(S.documentTypeList("blogPage").title("Blog Pages")),
+              S.listItem()
+                .title("Blog Posts")
+                .schemaType("blogPost")
+                .child(S.documentTypeList("blogPost").title("Blog Posts")),
+            ])
+        ),
 
       S.listItem()
         .title("Partners Page")
