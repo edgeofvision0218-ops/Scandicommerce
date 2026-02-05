@@ -6,6 +6,16 @@ import { Search, X, ChevronDown, ChevronUp, ShoppingBag, Mail, Headphones, Star,
 import { urlFor } from '@/sanity/lib/image'
 import type { Image as SanityImage } from 'sanity'
 
+/** Resolved image shape returned by GROQ when using asset-> (dereferenced) */
+export interface ResolvedSanityImage {
+  asset?: { _id?: string; url?: string }
+  crop?: unknown
+  hotspot?: unknown
+}
+
+/** Image type accepted by PartnersGrid: either Sanity reference or GROQ-resolved */
+export type PartnerImage = SanityImage | ResolvedSanityImage
+
 export interface PartnerCategoryItem {
   _id: string
   title: string
@@ -18,10 +28,10 @@ interface PartnerData {
   categories?: PartnerCategoryItem[] | string[]
   description?: string
   benefits?: string[]
-  /** Full Sanity image (crop/hotspot applied when building URL) */
-  image?: SanityImage
-  /** Full Sanity image for logo */
-  logo?: SanityImage
+  /** Sanity image (reference or resolved); used with urlFor when present */
+  image?: PartnerImage
+  /** Sanity image for logo (reference or resolved) */
+  logo?: PartnerImage
   /** Fallback URL when image comes from non-Sanity source */
   imageUrl?: string
   logoUrl?: string
