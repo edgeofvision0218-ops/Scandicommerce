@@ -33,6 +33,7 @@ export const blogPost = defineType({
       title: "Slug",
       type: "slug",
       group: "content",
+      description: "URL path after /resources/ only. Example: for https://yoursite.com/en/resources/10-essential-shopify-apps-norwegian-ecommerce-2025 enter: 10-essential-shopify-apps-norwegian-ecommerce-2025 (no /resources/, no /en/, no slashes). Use 'Generate' from title or type manually.",
       options: {
         source: "title",
         maxLength: 96,

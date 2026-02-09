@@ -1356,6 +1356,14 @@ export const blogPostSlugsQuery = groq`
   *[_type == "blogPost" && defined(slug.current)]{ "slug": slug.current }
 `;
 
+// Slug + language pairs so we only generate (lang, slug) that exist (avoids 404 for valid slugs)
+export const blogPostSlugLanguagePairsQuery = groq`
+  *[_type == "blogPost" && defined(slug.current)] {
+    "slug": slug.current,
+    "language": language
+  }
+`;
+
 // Merch Page Query
 export const merchPageQuery = groq`
   *[_type == "merchPage" && (language == $language || !defined(language))][0] {

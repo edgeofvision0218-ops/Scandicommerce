@@ -58,6 +58,16 @@ export const blogPage = defineType({
           type: "reference",
           to: [{ type: "blogPost" }],
           description: "Link to a blog post for title, image, date, etc. Leave empty to use manual fields below.",
+          options: {
+            filter: ({ document }) => {
+              const pageLang = document?.language ?? "en";
+              return {
+                filter:
+                  '_type == "blogPost" && (language == $pageLang || (!defined(language) && $pageLang == "en"))',
+                params: { pageLang },
+              };
+            },
+          },
         }),
         defineField({ name: "image", title: "Featured Image (if no post selected)", type: "image", options: { hotspot: true } }),
         defineField({
@@ -92,11 +102,22 @@ export const blogPage = defineType({
           name: "articles",
           title: "Articles",
           type: "array",
-          description: "Select blog posts to show in the grid. Order matters.",
+          description:
+            "Select blog posts to show in the grid. Only posts in this page's language are listed. Order matters.",
           of: [
             defineArrayMember({
               type: "reference",
               to: [{ type: "blogPost" }],
+              options: {
+                filter: ({ document }) => {
+                  const pageLang = document?.language ?? "en";
+                  return {
+                    filter:
+                      '_type == "blogPost" && (language == $pageLang || (!defined(language) && $pageLang == "en"))',
+                    params: { pageLang },
+                  };
+                },
+              },
             }),
           ],
         }),
