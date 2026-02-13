@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.4.0",
     "@portabletext/react": "^6.0.2",
     "@sanity/assist": "^5.0.4",
     "@sanity/document-internationalization": "^3.3.3",
