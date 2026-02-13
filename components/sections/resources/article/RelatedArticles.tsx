@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { RelatedArticle } from '@/lib/articles'
 import { FiClock } from 'react-icons/fi'
 
@@ -11,7 +12,8 @@ interface RelatedArticlesProps {
   lang?: string
 }
 
-export default function RelatedArticles({ articles, lang }: RelatedArticlesProps) {
+export default function RelatedArticles({ articles }: RelatedArticlesProps) {
+  const { localizedHref } = useLanguage()
   return (
     <section className="bg-[#EFEFEF] py-12 lg:py-16">
       <div className="section_container mx-auto page-padding-x">
@@ -23,7 +25,7 @@ export default function RelatedArticles({ articles, lang }: RelatedArticlesProps
           {articles.map((article, index) => (
             <Link
               key={index}
-              href={lang ? `/${lang}/resources/${article.slug}` : `/resources/${article.slug}`}
+              href={localizedHref(`/resources/${article.slug}`)}
               className="group relative overflow-hidden"
             >
               {/* Article Image */}

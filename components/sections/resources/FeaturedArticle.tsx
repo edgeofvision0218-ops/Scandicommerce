@@ -1,5 +1,8 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { HiCalendar, HiClock } from 'react-icons/hi2'
 
 interface TagData {
@@ -30,7 +33,8 @@ const defaultTags: TagData[] = [
   { label: 'Featured', isPrimary: false },
 ]
 
-export default function FeaturedArticle({ featuredArticle, lang }: FeaturedArticleProps) {
+export default function FeaturedArticle({ featuredArticle }: FeaturedArticleProps) {
+  const { localizedHref } = useLanguage()
   const imageUrl = featuredArticle?.imageUrl || '/images/resources/featured_article/banner.png'
   const tags = featuredArticle?.tags && featuredArticle.tags.length > 0 ? featuredArticle.tags : defaultTags
   const title = featuredArticle?.title || '10 Essential Shopify Apps for Norwegian E-commerce in 2025'
@@ -38,7 +42,7 @@ export default function FeaturedArticle({ featuredArticle, lang }: FeaturedArtic
   const date = featuredArticle?.date || 'Jan 15, 2025'
   const readTime = featuredArticle?.readTime || '8 min read'
   const rawLink = featuredArticle?.link || '/resources/10-essential-shopify-apps-norwegian-ecommerce-2025'
-  const link = lang ? `/${lang}${rawLink.startsWith('/') ? rawLink : `/${rawLink}`}` : rawLink
+  const link = localizedHref(rawLink.startsWith('/') ? rawLink : `/${rawLink}`)
   const buttonText = featuredArticle?.buttonText || 'Read Article'
 
   return (

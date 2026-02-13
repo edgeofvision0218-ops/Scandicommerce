@@ -1,6 +1,13 @@
 import { headers, cookies } from 'next/headers'
 import { defaultLanguage, isLocaleId } from '@/sanity/lib/languages'
 
+/** Get locale from request headers (e.g. x-locale set by middleware). Use when querying Sanity. */
+export function getLocale(headersList: Headers): string {
+  const locale = headersList.get('x-locale')
+  if (locale && isLocaleId(locale)) return locale
+  return defaultLanguage
+}
+
 /**
  * Get the current language from path params ([lang]), cookies, or default (server-side).
  * Use in pages under app/[lang]/... via params.lang.
@@ -18,10 +25,15 @@ export function getLanguageFromParams(params: { lang?: string }): string {
 /**
  * Get the current language from URL search params, cookies, or default (server-side).
  * Used when path-based lang is not available (e.g. legacy ?lang= or non-[lang] routes).
+ * Prefers x-locale header (set by middleware for domain-based locale).
  */
 export async function getServerLanguage(): Promise<string> {
   try {
     const headersList = await headers()
+    const localeFromHeader = headersList.get('x-locale')
+    if (localeFromHeader && isLocaleId(localeFromHeader)) {
+      return localeFromHeader
+    }
     const pathname = headersList.get('x-pathname') || headersList.get('x-url') || ''
     const pathSegment = pathname.replace(/^\/+|\/+$/g, '').split('/')[0] || ''
     if (pathSegment && isLocaleId(pathSegment)) {

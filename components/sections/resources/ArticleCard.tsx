@@ -1,5 +1,8 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { GoCalendar } from 'react-icons/go'
 import { LuClock4 } from 'react-icons/lu'
 
@@ -20,8 +23,9 @@ interface ArticleCardProps {
   lang?: string
 }
 
-export default function ArticleCard({ article, lang }: ArticleCardProps) {
-  const href = lang ? `/${lang}/resources/${article.slug}` : `/resources/${article.slug}`
+export default function ArticleCard({ article }: ArticleCardProps) {
+  const { localizedHref } = useLanguage()
+  const href = localizedHref(`/resources/${article.slug}`)
   return (
     <Link
       href={href}
