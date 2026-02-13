@@ -10,30 +10,14 @@ export const languages = [
 /** Valid locale slugs for path-based URLs: /en/..., /no/..., etc. */
 export const LOCALE_IDS = languages.map((l) => l.id);
 
-/** Domain-based locale: hostname (no port) → locale. Used when not using path-based /en, /no. */
-export const DOMAIN_LOCALE_MAP: Record<string, string> = {
-  'scandicommerce.no': 'no',
-  'scandicommerce.com': 'en',
-  'www.scandicommerce.no': 'no',
-  'www.scandicommerce.com': 'en',
-}
-
-/** Locale → primary domain for language switcher (same path on other domain). */
+/** Domain-based locale: production URLs use these domains (no /en, /no in path) */
 export const LOCALE_DOMAINS: Record<string, string> = {
   en: 'https://scandicommerce.com',
   no: 'https://scandicommerce.no',
-}
+} as const;
 
-export function getLocaleFromHost(host: string | null): string | null {
-  if (!host) return null
-  const hostname = host.split(':')[0].toLowerCase()
-  return DOMAIN_LOCALE_MAP[hostname] ?? null
-}
-
-/** Whether this host uses domain-based locale (no /en, /no in URL). */
-export function isDomainBasedHost(host: string | null): boolean {
-  return getLocaleFromHost(host) !== null
-}
+/** Locales that use domain-based URLs in production (en → .com, no → .no) */
+export const DOMAIN_BASED_LOCALES = ['en', 'no'] as const;
 
 /** Shape expected by document-internationalization and other Sanity plugins */
 export const supportedLanguages = languages.map(({ id, title }) => ({ id, title }));

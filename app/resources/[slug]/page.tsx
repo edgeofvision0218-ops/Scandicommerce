@@ -161,20 +161,7 @@ export async function generateMetadata({
   }
 }
 
-/** Normalize slug to a single segment (no slashes). Sanity may store full paths. */
-function normalizeSlug(slug: string | null | undefined): string | null {
-  if (slug == null || typeof slug !== 'string') return null
-  const trimmed = slug.trim().replace(/^\/+|\/+$/g, '')
-  if (!trimmed) return null
-  const lastSegment = trimmed.split('/').filter(Boolean).pop()
-  if (!lastSegment || lastSegment.includes('/')) return null
-  return lastSegment
-}
-
 export async function generateStaticParams() {
   const slugs = await client.fetch<{ slug: string }[]>(blogPostSlugsQuery, getQueryParams({}))
-  return (slugs ?? [])
-    .map((s) => normalizeSlug(s.slug))
-    .filter((slug): slug is string => slug != null)
-    .map((slug) => ({ slug }))
+  return (slugs ?? []).map((s) => ({ slug: s.slug }))
 }

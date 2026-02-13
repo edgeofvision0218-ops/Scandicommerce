@@ -27,7 +27,7 @@ function LanguageSwitcherPlaceholder() {
 }
 
 function LanguageSwitcherInner() {
-  const { currentLanguage, setLanguage, availableLanguages } = useLanguage()
+  const { currentLanguage, setLanguage, availableLanguages, domainBased, urlForLocale } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -61,6 +61,8 @@ function LanguageSwitcherInner() {
   }
 
   const currentLang = availableLanguages.find((lang) => lang.id === currentLanguage)
+  // Domain-based: only show en and no; use <a> for cross-domain (do not use next/link)
+  const switcherLanguages = domainBased ? availableLanguages.filter((l) => l.id === 'en' || l.id === 'no') : availableLanguages
 
   return (
     <div className="relative min-w-0" ref={dropdownRef}>
@@ -84,30 +86,56 @@ function LanguageSwitcherInner() {
 
       {isOpen && (
         <div className="absolute right-0 mt-1.5 w-40 sm:w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1.5 z-[10002]">
-          {availableLanguages.map((lang) => (
-            <button
-              key={lang.id}
-              onClick={() => handleLanguageChange(lang.id)}
-              className={`w-full text-left px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm transition-colors ${
-                currentLanguage === lang.id
-                  ? 'bg-teal/10 text-teal font-semibold'
-                  : 'text-gray-900 hover:bg-gray-50 hover:text-teal'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span>{lang.title}</span>
-                {currentLanguage === lang.id && (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
-              </div>
-            </button>
-          ))}
+          {switcherLanguages.map((lang) => {
+            const isCurrent = currentLanguage === lang.id
+            if (domainBased) {
+              const href = urlForLocale(lang.id)
+              return (
+                <a
+                  key={lang.id}
+                  href={href}
+                  className={`block w-full text-left px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm transition-colors ${
+                    isCurrent ? 'bg-teal/10 text-teal font-semibold' : 'text-gray-900 hover:bg-gray-50 hover:text-teal'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{lang.title}</span>
+                    {isCurrent && (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                </a>
+              )
+            }
+            return (
+              <button
+                key={lang.id}
+                onClick={() => handleLanguageChange(lang.id)}
+                className={`w-full text-left px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm transition-colors ${
+                  isCurrent ? 'bg-teal/10 text-teal font-semibold' : 'text-gray-900 hover:bg-gray-50 hover:text-teal'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{lang.title}</span>
+                  {isCurrent && (
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                </div>
+              </button>
+            )
+          })}
         </div>
       )}
     </div>

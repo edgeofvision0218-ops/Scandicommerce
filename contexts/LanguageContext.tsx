@@ -16,16 +16,9 @@ import {
   getLangFromPath,
   getPathWithoutLang,
   isLocaleId,
-  isDomainBasedHost,
-  getLocaleFromHost,
   LOCALE_DOMAINS,
+  DOMAIN_BASED_LOCALES,
 } from '@/sanity/lib/languages'
-
-function getLanguageFromCookie(): string | null {
-  if (typeof document === 'undefined') return null
-  const match = document.cookie.match(/\blanguage=(\w+)/)
-  return match && isLocaleId(match[1]) ? match[1] : null
-}
 
 interface Language {
   id: string
@@ -38,11 +31,26 @@ interface LanguageContextType {
   setLanguage: (lang: string) => void
   availableLanguages: Language[]
   getLanguageTitle: (id: string) => string
-  /** Build href for internal links so ?lang= is preserved when navigating */
+  /** Build href for internal links (path-only when domain-based, /lang/path when path-based) */
   localizedHref: (href: string) => string
+  /** True when locale is determined by domain (scandicommerce.com / scandicommerce.no) */
+  domainBased: boolean
+  /** Full URL for a locale (for language switcher cross-domain links) */
+  urlForLocale: (locale: string) => string
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
+
+function getDomainBasedFromHost(): boolean {
+  if (typeof window === 'undefined') return false
+  const h = window.location.hostname
+  return h.includes('scandicommerce.com') || h.includes('scandicommerce.no')
+}
+
+function getLocaleFromHost(): string {
+  if (typeof window === 'undefined') return defaultLanguage
+  return window.location.hostname.includes('scandicommerce.no') ? 'no' : 'en'
+}
 
 const defaultContextValue: LanguageContextType = {
   currentLanguage: defaultLanguage,
@@ -50,10 +58,12 @@ const defaultContextValue: LanguageContextType = {
   availableLanguages: languages,
   getLanguageTitle: (id: string) => languages.find((l) => l.id === id)?.title ?? id,
   localizedHref: (href: string) => href,
+  domainBased: false,
+  urlForLocale: (locale: string) => (DOMAIN_BASED_LOCALES.includes(locale as 'en' | 'no') ? LOCALE_DOMAINS[locale] ?? LOCALE_DOMAINS.en : LOCALE_DOMAINS.en),
 }
 
 /**
- * Syncs path-based locale (/en/..., /no/...) into context. Renders nothing.
+ * Syncs locale (domain-based or path-based) into context. Renders nothing.
  * Must be inside Suspense because it uses useSearchParams().
  */
 function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => void }) {
@@ -63,52 +73,46 @@ function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => voi
   const [currentLanguage, setCurrentLanguageState] = useState<string>(defaultLanguage)
   const [isInitialized, setIsInitialized] = useState(false)
 
-  // Path-based: /en/about, /no/shopify/... — derive lang from first segment
+  const domainBased = getDomainBasedFromHost()
   const langFromPath = getLangFromPath(pathname)
   const pathWithoutLang = getPathWithoutLang(pathname)
   const isPathBasedRoute = pathname !== '/' && isLocaleId(pathname.replace(/^\/+/, '').split('/')[0] || '')
-  const domainBased = typeof window !== 'undefined' && isDomainBasedHost(window.location.host)
-  const langFromDomain = typeof window !== 'undefined' ? getLocaleFromHost(window.location.host) : null
-  const langFromCookie = getLanguageFromCookie()
+
+  // Current path for same-page links (domain-based: path has no locale; path-based: path may have /en/...)
+  const pathForSwitcher = domainBased ? pathname : (pathWithoutLang === '/' ? '' : pathWithoutLang)
 
   useEffect(() => {
     if (!isInitialized) {
-      let lang: string
-      if (isPathBasedRoute) {
-        lang = langFromPath
-      } else if (domainBased && (langFromDomain || langFromCookie)) {
-        lang = langFromDomain || langFromCookie || defaultLanguage
-      } else {
-        lang = searchParams.get('lang') || (typeof window !== 'undefined' ? localStorage.getItem('language') : null) || defaultLanguage
-      }
+      const lang = domainBased
+        ? getLocaleFromHost()
+        : (isPathBasedRoute ? langFromPath : (searchParams.get('lang') || (typeof window !== 'undefined' ? localStorage.getItem('language') : null) || defaultLanguage))
       setCurrentLanguageState(lang)
       if (typeof window !== 'undefined') {
         localStorage.setItem('language', lang)
       }
       setIsInitialized(true)
     }
-  }, [searchParams, isInitialized, isPathBasedRoute, langFromPath, domainBased, langFromDomain, langFromCookie])
+  }, [searchParams, isInitialized, isPathBasedRoute, langFromPath, domainBased])
 
   useEffect(() => {
+    if (domainBased) {
+      const hostLang = getLocaleFromHost()
+      if (hostLang !== currentLanguage) setCurrentLanguageState(hostLang)
+      return
+    }
     if (isPathBasedRoute && langFromPath !== currentLanguage) {
       setCurrentLanguageState(langFromPath)
       if (typeof window !== 'undefined') {
         localStorage.setItem('language', langFromPath)
       }
-    } else if (domainBased && (langFromDomain || langFromCookie) && (langFromDomain || langFromCookie) !== currentLanguage) {
-      const lang = langFromDomain || langFromCookie
-      if (lang) {
-        setCurrentLanguageState(lang)
-        if (typeof window !== 'undefined') localStorage.setItem('language', lang)
-      }
-    } else if (!isPathBasedRoute && !domainBased) {
+    } else if (!isPathBasedRoute) {
       const q = searchParams.get('lang')
       if (q && q !== currentLanguage) {
         setCurrentLanguageState(q)
         if (typeof window !== 'undefined') localStorage.setItem('language', q)
       }
     }
-  }, [pathname, searchParams, currentLanguage, isPathBasedRoute, langFromPath, domainBased, langFromDomain, langFromCookie])
+  }, [pathname, searchParams, currentLanguage, isPathBasedRoute, langFromPath, domainBased])
 
   const setLanguage = useCallback(
     (lang: string) => {
@@ -117,9 +121,9 @@ function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => voi
         localStorage.setItem('language', lang)
         document.cookie = `language=${lang}; path=/; max-age=31536000`
       }
-      if (domainBased && LOCALE_DOMAINS[lang]) {
-        const path = pathname === '/' ? '' : pathname
-        window.location.href = LOCALE_DOMAINS[lang] + path
+      if (domainBased && DOMAIN_BASED_LOCALES.includes(lang as 'en' | 'no')) {
+        const baseUrl = LOCALE_DOMAINS[lang] || LOCALE_DOMAINS.en
+        window.location.href = `${baseUrl}${pathForSwitcher || ''}`
         return
       }
       if (isPathBasedRoute) {
@@ -131,7 +135,7 @@ function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => voi
         router.push(`${pathname}?${params.toString()}`)
       }
     },
-    [pathname, pathWithoutLang, isPathBasedRoute, domainBased, router, searchParams]
+    [pathname, pathWithoutLang, isPathBasedRoute, router, searchParams, domainBased, pathForSwitcher]
   )
 
   const getLanguageTitle = useCallback(
@@ -139,18 +143,23 @@ function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => voi
     []
   )
 
+  const urlForLocale = useCallback((locale: string): string => {
+    const base = DOMAIN_BASED_LOCALES.includes(locale as 'en' | 'no') ? LOCALE_DOMAINS[locale] ?? LOCALE_DOMAINS.en : LOCALE_DOMAINS.en
+    return `${base}${pathForSwitcher || ''}`
+  }, [pathForSwitcher])
+
   const localizedHref = useCallback(
     (href: string): string => {
       if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+        return href
+      }
+      if (domainBased) {
         return href
       }
       try {
         const [path, qs] = href.split('?')
         const clean = (path || '/').replace(/^\/+/, '') || ''
         const query = qs ? `?${qs}` : ''
-        if (domainBased) {
-          return clean === '' || clean === '/' ? (query ? `/?${query.slice(1)}` : '/') : `/${clean}${query}`
-        }
         if (clean === '' || clean === '/') return `/${currentLanguage}${query}`
         return `/${currentLanguage}/${clean}${query}`
       } catch {
@@ -160,19 +169,17 @@ function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => voi
     [currentLanguage, domainBased]
   )
 
-  const availableLanguages = domainBased
-    ? languages.filter((l) => LOCALE_DOMAINS[l.id])
-    : languages
-
   useEffect(() => {
     onValue({
       currentLanguage,
       setLanguage,
-      availableLanguages,
+      availableLanguages: languages,
       getLanguageTitle,
       localizedHref,
+      domainBased,
+      urlForLocale,
     })
-  }, [currentLanguage, setLanguage, getLanguageTitle, localizedHref, onValue, availableLanguages])
+  }, [currentLanguage, setLanguage, getLanguageTitle, localizedHref, domainBased, urlForLocale, onValue])
 
   return null
 }

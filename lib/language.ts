@@ -1,13 +1,6 @@
 import { headers, cookies } from 'next/headers'
 import { defaultLanguage, isLocaleId } from '@/sanity/lib/languages'
 
-/** Get locale from request headers (e.g. x-locale set by middleware). Use when querying Sanity. */
-export function getLocale(headersList: Headers): string {
-  const locale = headersList.get('x-locale')
-  if (locale && isLocaleId(locale)) return locale
-  return defaultLanguage
-}
-
 /**
  * Get the current language from path params ([lang]), cookies, or default (server-side).
  * Use in pages under app/[lang]/... via params.lang.
@@ -23,9 +16,21 @@ export function getLanguageFromParams(params: { lang?: string }): string {
 }
 
 /**
- * Get the current language from URL search params, cookies, or default (server-side).
- * Used when path-based lang is not available (e.g. legacy ?lang= or non-[lang] routes).
- * Prefers x-locale header (set by middleware for domain-based locale).
+ * Whether the current request uses domain-based locale (scandicommerce.com / scandicommerce.no).
+ * When true, internal links should not include /en or /no in the path.
+ */
+export async function getDomainBased(): Promise<boolean> {
+  try {
+    const headersList = await headers()
+    return headersList.get('x-domain-based') === '1'
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Get the current language from x-locale (set by middleware), path, cookies, or default (server-side).
+ * Domain-based: middleware sets x-locale from host. Path-based: from path or cookie.
  */
 export async function getServerLanguage(): Promise<string> {
   try {
@@ -60,6 +65,15 @@ export async function getServerLanguage(): Promise<string> {
     // Fallback to default
   }
   return defaultLanguage
+}
+
+/**
+ * Server-side: locale + whether links should be path-only (domain-based).
+ * Use when building hrefs so domain-based uses /path and path-based uses /lang/path.
+ */
+export async function getLocaleConfig(): Promise<{ locale: string; domainBased: boolean }> {
+  const [locale, domainBased] = await Promise.all([getServerLanguage(), getDomainBased()])
+  return { locale, domainBased }
 }
 
 /**

@@ -2,13 +2,13 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
 import { RelatedArticle } from '@/lib/articles'
 import { FiClock } from 'react-icons/fi'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface RelatedArticlesProps {
   articles: RelatedArticle[]
-  /** Current locale (e.g. "en", "no") so links work on /no/resources/... etc. */
+  /** Current locale (e.g. "en", "no") so links work on /no/resources/... etc. Optional when using localizedHref. */
   lang?: string
 }
 

@@ -2,9 +2,9 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
 import { GoCalendar } from 'react-icons/go'
 import { LuClock4 } from 'react-icons/lu'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Article {
   id: number
@@ -19,7 +19,7 @@ interface Article {
 
 interface ArticleCardProps {
   article: Article
-  /** Current locale (e.g. "en", "no") so links work on /no/resources/blog etc. */
+  /** Current locale (e.g. "en", "no") so links work on /no/resources/blog etc. Optional when using localizedHref. */
   lang?: string
 }
 

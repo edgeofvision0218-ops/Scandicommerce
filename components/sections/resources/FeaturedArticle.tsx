@@ -2,8 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
 import { HiCalendar, HiClock } from 'react-icons/hi2'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface TagData {
   label?: string
@@ -23,7 +23,7 @@ interface FeaturedArticleData {
 
 interface FeaturedArticleProps {
   featuredArticle?: FeaturedArticleData
-  /** Current locale (e.g. "en", "no") so links work on /no/resources/blog etc. */
+  /** Current locale (e.g. "en", "no") so links work on /no/resources/blog etc. Optional when using localizedHref. */
   lang?: string
 }
 
