@@ -165,18 +165,37 @@ export async function generateMetadata({
   }
 }
 
+/** Normalize slug to a single segment (no slashes). Sanity may store full paths like /en/resources/foo. */
+function normalizeSlug(slug: string | null | undefined): string | null {
+  if (slug == null || typeof slug !== 'string') return null
+  const trimmed = slug.trim().replace(/^\/+|\/+$/g, '')
+  if (!trimmed) return null
+  const lastSegment = trimmed.split('/').filter(Boolean).pop()
+  if (!lastSegment || lastSegment.includes('/')) return null
+  return lastSegment
+}
+
 export async function generateStaticParams() {
   const pairs = await client.fetch<{ slug: string; language: string | null }[]>(
     blogPostSlugLanguagePairsQuery,
     {}
   )
   const list = pairs ?? []
+  const seen = new Set<string>()
   return list.flatMap((p) => {
-    const slug = p.slug
+    const rawSlug = p.slug
+    const slug = normalizeSlug(rawSlug)
+    if (!slug) return []
     const lang = p.language && p.language.trim() !== '' ? p.language : null
-    if (lang) {
-      return [{ lang, slug }]
-    }
-    return LOCALE_IDS.map((l) => ({ lang: l, slug }))
+    const entries =
+      lang && LOCALE_IDS.includes(lang)
+        ? [{ lang, slug }]
+        : LOCALE_IDS.map((l) => ({ lang: l, slug }))
+    return entries.filter((e) => {
+      const key = `${e.lang}:${e.slug}`
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
   })
 }
