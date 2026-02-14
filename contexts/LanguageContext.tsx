@@ -16,8 +16,6 @@ import {
   getLangFromPath,
   getPathWithoutLang,
   isLocaleId,
-  getBaseUrlForLocale,
-  getLocaleFromHost,
 } from '@/sanity/lib/languages'
 
 interface Language {
@@ -56,44 +54,36 @@ function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => voi
   const [currentLanguage, setCurrentLanguageState] = useState<string>(defaultLanguage)
   const [isInitialized, setIsInitialized] = useState(false)
 
-  // Domain-based (e.g. scandicommerce.com) or path-based (/en/about)
-  const host = typeof window !== 'undefined' ? window.location.hostname : ''
-  const localeFromHost = getLocaleFromHost(host)
-  const langFromPath = localeFromHost ?? getLangFromPath(pathname)
+  // Path-based: /en/about, /no/shopify/... — derive lang from first segment
+  const langFromPath = getLangFromPath(pathname)
   const pathWithoutLang = getPathWithoutLang(pathname)
-  const isPathBasedRoute =
-    pathname !== '/' && isLocaleId(pathname.replace(/^\/+/, '').split('/')[0] || '')
-  const isDomainBasedLocale = !!localeFromHost
+  const isPathBasedRoute = pathname !== '/' && isLocaleId(pathname.replace(/^\/+/, '').split('/')[0] || '')
 
   useEffect(() => {
     if (!isInitialized) {
-      const lang = isDomainBasedLocale
-        ? langFromPath
-        : isPathBasedRoute
-          ? langFromPath
-          : (searchParams.get('lang') || (typeof window !== 'undefined' ? localStorage.getItem('language') : null) || defaultLanguage)
+      const lang = isPathBasedRoute ? langFromPath : (searchParams.get('lang') || (typeof window !== 'undefined' ? localStorage.getItem('language') : null) || defaultLanguage)
       setCurrentLanguageState(lang)
       if (typeof window !== 'undefined') {
         localStorage.setItem('language', lang)
       }
       setIsInitialized(true)
     }
-  }, [searchParams, isInitialized, isPathBasedRoute, isDomainBasedLocale, langFromPath])
+  }, [searchParams, isInitialized, isPathBasedRoute, langFromPath])
 
   useEffect(() => {
-    if (isDomainBasedLocale || (isPathBasedRoute && langFromPath !== currentLanguage)) {
+    if (isPathBasedRoute && langFromPath !== currentLanguage) {
       setCurrentLanguageState(langFromPath)
       if (typeof window !== 'undefined') {
         localStorage.setItem('language', langFromPath)
       }
-    } else if (!isPathBasedRoute && !isDomainBasedLocale) {
+    } else if (!isPathBasedRoute) {
       const q = searchParams.get('lang')
       if (q && q !== currentLanguage) {
         setCurrentLanguageState(q)
         if (typeof window !== 'undefined') localStorage.setItem('language', q)
       }
     }
-  }, [pathname, searchParams, currentLanguage, isPathBasedRoute, isDomainBasedLocale, langFromPath])
+  }, [pathname, searchParams, currentLanguage, isPathBasedRoute, langFromPath])
 
   const setLanguage = useCallback(
     (lang: string) => {
@@ -101,15 +91,6 @@ function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => voi
       if (typeof window !== 'undefined') {
         localStorage.setItem('language', lang)
         document.cookie = `language=${lang}; path=/; max-age=31536000`
-      }
-      // If target language has its own domain (e.g. en → scandicommerce.com, no → scandicommerce.no), navigate there
-      const targetBase = typeof window !== 'undefined' ? getBaseUrlForLocale(lang) : null
-      const currentHost = typeof window !== 'undefined' ? window.location.hostname : ''
-      const localeFromHost = getLocaleFromHost(currentHost)
-      if (targetBase && localeFromHost !== null) {
-        const path = pathWithoutLang === '/' ? '' : pathWithoutLang
-        window.location.href = `${targetBase}${path || '/'}`
-        return
       }
       if (isPathBasedRoute) {
         const base = pathWithoutLang === '/' ? '' : pathWithoutLang
@@ -137,10 +118,6 @@ function LanguageUrlSync({ onValue }: { onValue: (v: LanguageContextType) => voi
         const [path, qs] = href.split('?')
         const clean = (path || '/').replace(/^\/+/, '') || ''
         const query = qs ? `?${qs}` : ''
-        const host = typeof window !== 'undefined' ? window.location.hostname : ''
-        if (getLocaleFromHost(host)) {
-          return (clean ? `/${clean}` : '/') + query
-        }
         if (clean === '' || clean === '/') return `/${currentLanguage}${query}`
         return `/${currentLanguage}/${clean}${query}`
       } catch {

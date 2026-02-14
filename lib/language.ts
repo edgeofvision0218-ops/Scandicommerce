@@ -18,15 +18,10 @@ export function getLanguageFromParams(params: { lang?: string }): string {
 /**
  * Get the current language from URL search params, cookies, or default (server-side).
  * Used when path-based lang is not available (e.g. legacy ?lang= or non-[lang] routes).
- * Respects domain-based locale (x-locale-from-host set by middleware for scandicommerce.com / scandicommerce.no).
  */
 export async function getServerLanguage(): Promise<string> {
   try {
     const headersList = await headers()
-    const localeFromHost = headersList.get('x-locale-from-host')
-    if (localeFromHost && isLocaleId(localeFromHost)) {
-      return localeFromHost
-    }
     const pathname = headersList.get('x-pathname') || headersList.get('x-url') || ''
     const pathSegment = pathname.replace(/^\/+|\/+$/g, '').split('/')[0] || ''
     if (pathSegment && isLocaleId(pathSegment)) {

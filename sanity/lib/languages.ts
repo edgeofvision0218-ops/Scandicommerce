@@ -19,35 +19,6 @@ export function isLocaleId(id: string): boolean {
   return LOCALE_IDS.includes(id);
 }
 
-/**
- * Domain-based locale: each host maps to a single language.
- * Used when you serve en on scandicommerce.com and no on scandicommerce.no.
- */
-export const DOMAIN_TO_LOCALE: Record<string, string> = {
-  "scandicommerce.com": "en",
-  "www.scandicommerce.com": "en",
-  "scandicommerce.no": "no",
-  "www.scandicommerce.no": "no",
-};
-
-/**
- * For language switcher: when user switches language, navigate to this base URL.
- * Locales without a dedicated domain use path-based URLs on the default domain.
- */
-export function getBaseUrlForLocale(localeId: string): string | null {
-  const map: Record<string, string> = {
-    en: "https://scandicommerce.com",
-    no: "https://scandicommerce.no",
-  };
-  return map[localeId] ?? null;
-}
-
-/** Get locale from host (e.g. scandicommerce.no → "no"). Returns null if host is not a language domain. */
-export function getLocaleFromHost(host: string): string | null {
-  const h = (host || "").toLowerCase();
-  return DOMAIN_TO_LOCALE[h] ?? null;
-}
-
 /** Get language from pathname, e.g. /en/about → "en", /EN/about → "en". Returns default if first segment is not a locale. */
 export function getLangFromPath(pathname: string): string {
   const segment = pathname.replace(/^\/+|\/+$/g, "").split("/")[0] || "";
