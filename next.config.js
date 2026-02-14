@@ -5,34 +5,6 @@ const nextConfig = {
     styledComponents: true,
   },
   transpilePackages: ['@sanity/ui', 'sanity', 'motion'],
-  async redirects() {
-    return [
-      {
-        source: '/en',
-        has: [{ type: 'host', value: 'scandicommerce.vercel.app' }],
-        destination: 'https://scandicommerce.com',
-        permanent: true,
-      },
-      {
-        source: '/en/:path*',
-        has: [{ type: 'host', value: 'scandicommerce.vercel.app' }],
-        destination: 'https://scandicommerce.com/:path*',
-        permanent: true,
-      },
-      {
-        source: '/no',
-        has: [{ type: 'host', value: 'scandicommerce.vercel.app' }],
-        destination: 'https://scandicommerce.no',
-        permanent: true,
-      },
-      {
-        source: '/no/:path*',
-        has: [{ type: 'host', value: 'scandicommerce.vercel.app' }],
-        destination: 'https://scandicommerce.no/:path*',
-        permanent: true,
-      },
-    ]
-  },
   images: {
     domains: [],
     remotePatterns: [

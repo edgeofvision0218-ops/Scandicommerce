@@ -1,55 +1,65 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { LOCALE_IDS, defaultLanguage } from '@/sanity/lib/languages'
+import {
+  LOCALE_IDS,
+  defaultLanguage,
+  getLocaleFromHost,
+  getBaseUrlForLocale,
+  getPathWithoutLang,
+} from '@/sanity/lib/languages'
 
 function firstSegment(pathname: string): string {
   return pathname.replace(/^\/+|\/+$/g, '').split('/')[0] || ''
 }
 
-/** Production domains: locale is determined by host, not path */
-const DOMAIN_NO = 'scandicommerce.no'
-const DOMAIN_COM = 'scandicommerce.com'
-
-function isDomainBasedHost(host: string): boolean {
-  return host.includes(DOMAIN_NO) || host.includes(DOMAIN_COM)
-}
-
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-  const host = request.headers.get('host') || ''
-  const seg = firstSegment(pathname)
-  const segLower = seg.toLowerCase()
-  const hasLocaleInPath = LOCALE_IDS.includes(segLower)
+  const host = request.nextUrl.hostname || request.headers.get('host') || ''
+  const localeFromHost = getLocaleFromHost(host)
 
-  // --- Domain-based (scandicommerce.com / scandicommerce.no): no /en, /no in URL ---
-  if (isDomainBasedHost(host)) {
-    const locale = host.includes(DOMAIN_NO) ? 'no' : 'en'
-    const headers = new Headers(request.headers)
-    headers.set('x-locale', locale)
-    headers.set('x-domain-based', '1')
+  // --- Domain-based locale (e.g. scandicommerce.com → en, scandicommerce.no → no) ---
+  if (localeFromHost) {
+    const seg = firstSegment(pathname)
+    const segLower = seg.toLowerCase()
+    const hasLocale = LOCALE_IDS.includes(segLower)
 
-    // Uppercase locale in path → redirect to same path without locale (clean URL)
-    if (hasLocaleInPath && seg !== segLower) {
-      const rest = pathname.slice(seg.length) || ''
-      return NextResponse.redirect(new URL(`/${segLower}${rest}`, request.url))
-    }
-
-    // Path already has /en or /no → redirect to clean URL (same domain, no locale segment)
-    if (hasLocaleInPath && (segLower === 'en' || segLower === 'no')) {
-      const rest = pathname.slice(seg.length) || ''
-      const cleanPath = rest || '/'
-      const url = new URL(cleanPath, request.url)
+    // Same domain but URL has locale segment → redirect to clean URL (e.g. /en/about → /about)
+    if (hasLocale && segLower === localeFromHost) {
+      const pathWithoutLang = getPathWithoutLang(pathname)
+      const targetPath = pathWithoutLang === '/' ? '' : pathWithoutLang
+      const url = new URL(request.url)
+      url.pathname = targetPath || '/'
       return NextResponse.redirect(url)
     }
 
-    // No locale in path: rewrite to /{locale}{path} so app/[lang]/... routes receive params.lang
-    const rewritePath = `/${locale}${pathname === '/' ? '' : pathname}`
-    const rewriteUrl = new URL(rewritePath, request.url)
-    return NextResponse.rewrite(rewriteUrl, { request: { headers } })
+    // Same domain but path has a different locale (e.g. scandicommerce.com/no/about) → redirect to that locale's domain
+    if (hasLocale && segLower !== localeFromHost) {
+      const base = getBaseUrlForLocale(segLower)
+      if (base) {
+        const pathWithoutLang = getPathWithoutLang(pathname)
+        const targetPath = pathWithoutLang === '/' ? '' : pathWithoutLang
+        return NextResponse.redirect(new URL(targetPath || '/', base))
+      }
+    }
+
+    // No locale in path or path is / → rewrite to /{locale}/... so [lang] route is served
+    const internalPath = pathname === '/' || pathname === '' ? `/${localeFromHost}` : `/${localeFromHost}${pathname}`
+    const rewriteUrl = new URL(request.url)
+    rewriteUrl.pathname = internalPath
+    const res = NextResponse.rewrite(rewriteUrl)
+    res.headers.set('x-pathname', internalPath)
+    res.headers.set('x-url', request.url)
+    res.headers.set('x-locale-from-host', localeFromHost)
+    return res
   }
 
-  // --- Path-based (e.g. localhost, vercel.app before redirect): keep /en, /no in path ---
-  if (hasLocaleInPath && seg !== segLower) {
+  // --- Path-based locale (e.g. scandicommerce.vercel.app/en/..., default behavior) ---
+  const seg = firstSegment(pathname)
+  const segLower = seg.toLowerCase()
+  const hasLocale = LOCALE_IDS.includes(segLower)
+
+  // Redirect uppercase locale to lowercase (e.g. /EN/about -> /en/about)
+  if (hasLocale && seg !== segLower) {
     const rest = pathname.slice(seg.length) || ''
     return NextResponse.redirect(new URL(`/${segLower}${rest}`, request.url))
   }
@@ -58,18 +68,17 @@ export function middleware(request: NextRequest) {
   response.headers.set('x-pathname', pathname)
   response.headers.set('x-url', request.url)
 
-  const pathLocale = hasLocaleInPath ? segLower : null
-  const preferLang = request.cookies.get('language')?.value?.toLowerCase()
-  const locale = pathLocale ?? (preferLang && LOCALE_IDS.includes(preferLang) ? preferLang : defaultLanguage)
-  response.headers.set('x-locale', locale)
-  response.headers.set('x-domain-based', '0')
-
   if (pathname === '/' || pathname === '') {
-    return NextResponse.redirect(new URL(`/${locale}`, request.url))
+    const preferLang = request.cookies.get('language')?.value?.toLowerCase()
+    const lang = preferLang && LOCALE_IDS.includes(preferLang) ? preferLang : defaultLanguage
+    return NextResponse.redirect(new URL(`/${lang}`, request.url))
   }
 
-  if (!hasLocaleInPath && seg) {
-    return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url))
+  // Redirect paths without locale prefix to /en/... (e.g. /about -> /en/about)
+  if (!hasLocale && seg) {
+    const preferLang = request.cookies.get('language')?.value?.toLowerCase()
+    const lang = preferLang && LOCALE_IDS.includes(preferLang) ? preferLang : defaultLanguage
+    return NextResponse.redirect(new URL(`/${lang}${pathname}`, request.url))
   }
 
   return response

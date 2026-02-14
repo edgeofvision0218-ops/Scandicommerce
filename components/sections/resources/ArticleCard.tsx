@@ -1,10 +1,7 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
 import { GoCalendar } from 'react-icons/go'
 import { LuClock4 } from 'react-icons/lu'
-import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Article {
   id: number
@@ -19,13 +16,12 @@ interface Article {
 
 interface ArticleCardProps {
   article: Article
-  /** Current locale (e.g. "en", "no") so links work on /no/resources/blog etc. Optional when using localizedHref. */
+  /** Current locale (e.g. "en", "no") so links work on /no/resources/blog etc. */
   lang?: string
 }
 
-export default function ArticleCard({ article }: ArticleCardProps) {
-  const { localizedHref } = useLanguage()
-  const href = localizedHref(`/resources/${article.slug}`)
+export default function ArticleCard({ article, lang }: ArticleCardProps) {
+  const href = lang ? `/${lang}/resources/${article.slug}` : `/resources/${article.slug}`
   return (
     <Link
       href={href}

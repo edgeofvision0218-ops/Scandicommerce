@@ -4,16 +4,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { RelatedArticle } from '@/lib/articles'
 import { FiClock } from 'react-icons/fi'
-import { useLanguage } from '@/contexts/LanguageContext'
 
 interface RelatedArticlesProps {
   articles: RelatedArticle[]
-  /** Current locale (e.g. "en", "no") so links work on /no/resources/... etc. Optional when using localizedHref. */
+  /** Current locale (e.g. "en", "no") so links work on /no/resources/... etc. */
   lang?: string
 }
 
-export default function RelatedArticles({ articles }: RelatedArticlesProps) {
-  const { localizedHref } = useLanguage()
+export default function RelatedArticles({ articles, lang }: RelatedArticlesProps) {
   return (
     <section className="bg-[#EFEFEF] py-12 lg:py-16">
       <div className="section_container mx-auto page-padding-x">
@@ -25,7 +23,7 @@ export default function RelatedArticles({ articles }: RelatedArticlesProps) {
           {articles.map((article, index) => (
             <Link
               key={index}
-              href={localizedHref(`/resources/${article.slug}`)}
+              href={lang ? `/${lang}/resources/${article.slug}` : `/resources/${article.slug}`}
               className="group relative overflow-hidden"
             >
               {/* Article Image */}
