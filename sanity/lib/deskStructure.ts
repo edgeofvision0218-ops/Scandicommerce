@@ -1,5 +1,5 @@
 import { StructureBuilder } from "sanity/structure";
-import { DocumentsIcon, ComposeIcon, CogIcon } from "@sanity/icons";
+import { DocumentsIcon, ComposeIcon, CogIcon, CalendarIcon } from "@sanity/icons";
 import { PageListWithDelete } from "@/sanity/components/PageListWithDelete";
 import { languages } from "@/sanity/lib/languages";
 
@@ -184,6 +184,16 @@ export const deskStructure = (S: StructureBuilder) =>
         .title("Contact Page")
         .schemaType("contactPage")
         .child(S.documentTypeList("contactPage").title("Contact Pages")),
+
+      S.listItem()
+        .title("Calendly Bookings")
+        .icon(CalendarIcon)
+        .schemaType("calendlyBooking")
+        .child(
+          S.documentTypeList("calendlyBooking")
+            .title("Calendly Bookings")
+            .defaultOrdering([{ field: "startTime", direction: "desc" }])
+        ),
 
       S.listItem()
         .title("Work Page")
