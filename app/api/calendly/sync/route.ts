@@ -96,7 +96,21 @@ export async function POST(request: NextRequest) {
 
     const sanity = getServerClient();
     let created = 0;
-    let skipped = 0;
+    let updated = 0;
+
+    const docFields = (
+      inv: CalendlyInvitee,
+      ev: CalendlyEvent
+    ) => ({
+      inviteeName: inv.name ?? "",
+      inviteeEmail: inv.email ?? "",
+      eventName: ev.name ?? "",
+      startTime: ev.start_time ? new Date(ev.start_time).toISOString() : undefined,
+      endTime: ev.end_time ? new Date(ev.end_time).toISOString() : undefined,
+      status: inv.status === "canceled" ? "canceled" : "active",
+      calendlyInviteeUri: inv.uri ?? "",
+      calendlyEventUri: ev.uri ?? "",
+    });
 
     for (const ev of events) {
       if (!ev.uri) continue;
@@ -107,34 +121,29 @@ export async function POST(request: NextRequest) {
       const invitees = inviteesRes.collection ?? [];
       for (const inv of invitees) {
         if (!inv.uri) continue;
-        const existing = await sanity.fetch<string | null>(
+        const existingId = await sanity.fetch<string | null>(
           `*[_type == "calendlyBooking" && calendlyInviteeUri == $uri][0]._id`,
           { uri: inv.uri }
         );
-        if (existing) {
-          skipped++;
-          continue;
+        const fields = docFields(inv, ev);
+        if (existingId) {
+          await sanity.patch(existingId).set(fields).commit();
+          updated++;
+        } else {
+          await sanity.create({
+            _type: "calendlyBooking",
+            ...fields,
+          });
+          created++;
         }
-        await sanity.create({
-          _type: "calendlyBooking",
-          inviteeName: inv.name ?? "",
-          inviteeEmail: inv.email ?? "",
-          eventName: ev.name ?? "",
-          startTime: ev.start_time ? new Date(ev.start_time).toISOString() : undefined,
-          endTime: ev.end_time ? new Date(ev.end_time).toISOString() : undefined,
-          status: inv.status === "canceled" ? "canceled" : "active",
-          calendlyInviteeUri: inv.uri,
-          calendlyEventUri: ev.uri,
-        });
-        created++;
       }
     }
 
     return NextResponse.json({
       ok: true,
-      message: "Sync complete. Existing Calendly meetings have been imported into Sanity.",
+      message: "Sync complete. No duplicates: existing meetings updated, new ones created.",
       created,
-      skipped,
+      updated,
       total_events: events.length,
     });
   } catch (err) {
