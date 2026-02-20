@@ -1,6 +1,7 @@
 import { StructureBuilder } from "sanity/structure";
-import { DocumentsIcon, ComposeIcon, CogIcon, CalendarIcon } from "@sanity/icons";
+import { DocumentsIcon, ComposeIcon, CogIcon, CalendarIcon, PlugIcon } from "@sanity/icons";
 import { PageListWithDelete } from "@/sanity/components/PageListWithDelete";
+import { CalendlySetup } from "@/sanity/components/CalendlySetup";
 import { languages } from "@/sanity/lib/languages";
 
 function pageListWithDelete(
@@ -188,11 +189,23 @@ export const deskStructure = (S: StructureBuilder) =>
       S.listItem()
         .title("Calendly Bookings")
         .icon(CalendarIcon)
-        .schemaType("calendlyBooking")
         .child(
-          S.documentTypeList("calendlyBooking")
+          S.list()
             .title("Calendly Bookings")
-            .defaultOrdering([{ field: "startTime", direction: "desc" }])
+            .items([
+              S.listItem()
+                .title("Setup (register webhook & sync)")
+                .icon(PlugIcon)
+                .child(S.component(CalendlySetup).id("calendly-setup")),
+              S.listItem()
+                .title("Bookings")
+                .schemaType("calendlyBooking")
+                .child(
+                  S.documentTypeList("calendlyBooking")
+                    .title("Calendly Bookings")
+                    .defaultOrdering([{ field: "startTime", direction: "desc" }])
+                ),
+            ])
         ),
 
       S.listItem()
