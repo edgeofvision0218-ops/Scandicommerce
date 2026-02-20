@@ -80,16 +80,19 @@ export const calendlyBooking = defineType({
       inviteeEmail: "inviteeEmail",
       eventName: "eventName",
       startTime: "startTime",
+      status: "status",
     },
-    prepare({ inviteeName, inviteeEmail, eventName, startTime }) {
+    prepare({ inviteeName, inviteeEmail, eventName, startTime, status }) {
       const date = startTime
         ? new Date(startTime).toLocaleString(undefined, {
             dateStyle: "short",
             timeStyle: "short",
           })
         : "No date";
+      const name = inviteeName || inviteeEmail || "Unnamed";
+      const statusLabel = status === "canceled" ? "Canceled" : status === "active" ? "Active" : status || "—";
       return {
-        title: inviteeName || inviteeEmail || "Unnamed",
+        title: `${name} (${statusLabel})`,
         subtitle: `${eventName || "Meeting"} — ${date}`,
       };
     },
