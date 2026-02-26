@@ -506,6 +506,7 @@ export const allPackagesPageQuery = groq`
         bestFor,
         included,
         description,
+        "slug": page->slug.current,
         href
       }
     },
@@ -1439,7 +1440,7 @@ export const merchProductSettingsQuery = groq`
   }
 `;
 
-// Header Settings Query
+// Header Settings Query – resolves page references to slug so header links follow Sanity slugs
 export const headerSettingsQuery = groq`
   *[_type == "headerSettings" && (language == $language || !defined(language))][0] {
     _id,
@@ -1448,23 +1449,27 @@ export const headerSettingsQuery = groq`
       label,
       items[] {
         label,
-        href
+        href,
+        "slug": page->slug.current
       }
     },
     shopifyMenu {
       label,
       items[] {
         label,
-        href
+        href,
+        "slug": page->slug.current
       }
     },
     mainNavLinks[] {
       label,
-      href
+      href,
+      "slug": page->slug.current
     },
     ctaButton {
       label,
-      href
+      href,
+      "slug": page->slug.current
     }
   }
 `;
@@ -1478,6 +1483,7 @@ export const footerSettingsQuery = groq`
       title,
       links[] {
         label,
+        "slug": page->slug.current,
         href
       }
     },
@@ -1495,6 +1501,7 @@ export const footerSettingsQuery = groq`
       orgNumber,
       legalLinks[] {
         label,
+        "slug": page->slug.current,
         href
       },
       copyrightText
@@ -1564,4 +1571,55 @@ export const vippsHurtigkassePageQuery = groq`
       metaDescription
     }
   }
+`;
+
+// ============================================
+// Resolve page by path (slug) + language
+// Used by app/[lang]/[[...slug]]/page.tsx for slug-driven routing.
+// Path is the URL path without locale, e.g. "about", "om-oss", "services/all_packages".
+// Returns _type and _id so the app can fetch full data and render the right component.
+// ============================================
+const PAGE_TYPES_WITH_SLUG = [
+  "aboutPage",
+  "contactPage",
+  "workPage",
+  "partnersPage",
+  "blogPage",
+  "allPackagesPage",
+  "migratePage",
+  "shopifyPosPage",
+  "shopifyPosInfoPage",
+  "shopifyXAiPage",
+  "shopifyXPimPage",
+  "whyShopifyPage",
+  "shopifyPlatformPage",
+  "vippsHurtigkassePage",
+  "shopifyTcoCalculatorPage",
+  "shopifyDevelopmentPage",
+  "merchPage",
+  "packageDetailPage",
+];
+
+// Matches slug with or without locale prefix (e.g. "tjenester/vare_pakker" or "no/tjenester/vare_pakker")
+export const resolvePageByPathQuery = groq`
+  *[_type in $pageTypes && (slug.current == $path || slug.current == $pathWithLocale) && (language == $language || !defined(language))][0] {
+    _type,
+    _id
+  }
+`;
+
+export const RESOLVE_PAGE_TYPES = PAGE_TYPES_WITH_SLUG;
+
+// Resolve detail pages by last segment (e.g. blogPost by "article-slug", packageDetailPage by "package-slug")
+export const resolveBlogPostBySlugQuery = groq`
+  *[_type == "blogPost" && slug.current == $slug && (language == $language || !defined(language))][0] { _type, _id }
+`;
+
+export const resolvePackageDetailBySlugQuery = groq`
+  *[_type == "packageDetailPage" && slug.current == $slug && (language == $language || !defined(language))][0] { _type, _id }
+`;
+
+// Given a page type, find its slug in a different language (for language switching)
+export const resolveTranslatedSlugQuery = groq`
+  *[_type == $type && language == $targetLang][0] { "slug": slug.current }
 `;

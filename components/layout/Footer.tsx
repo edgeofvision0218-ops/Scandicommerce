@@ -5,7 +5,8 @@ import { FaLinkedinIn, FaTwitter, FaInstagram, FaFacebookF, FaYoutube, FaGithub 
 
 interface FooterLink {
   label?: string
-  href?: string
+  slug?: string | null
+  href?: string | null
 }
 
 interface FooterColumn {
@@ -83,10 +84,10 @@ const defaultBottomSection = {
   badgeText: 'Shopify Plus Partner',
   orgNumber: 'Org.nr: 123 456 789',
   legalLinks: [
-    { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms', href: '/terms' },
-    { label: 'Cookies', href: '/cookies' },
-  ],
+    { label: 'Privacy Policy', href: '/privacy', slug: null },
+    { label: 'Terms', href: '/terms', slug: null },
+    { label: 'Cookies', href: '/cookies', slug: null },
+  ] as FooterLink[],
   copyrightText: '© 2025 ScandiCommerce. All rights reserved.',
 }
 
@@ -138,7 +139,7 @@ export default function Footer({ settings }: FooterProps) {
                 {column.links?.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <LocalizedLink
-                      href={link.href || '#'}
+                      href={link.slug ? `/${link.slug}` : (link.href || '#')}
                       className="text-gray-300 hover:text-teal transition-colors"
                     >
                       {link.label}
@@ -216,7 +217,7 @@ export default function Footer({ settings }: FooterProps) {
                 {bottomSection.legalLinks.map((link, index) => (
                   <LocalizedLink
                     key={index}
-                    href={link.href || '#'}
+                    href={link.slug ? `/${link.slug}` : (link.href || '#')}
                     className="text-gray-400 hover:text-teal transition-colors"
                   >
                     {link.label}
